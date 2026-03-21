@@ -1,0 +1,63 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  height: 56px;
+  background: #1e1e2e;
+  border-bottom: 1px solid #333;
+  flex-shrink: 0;
+}
+
+.brand {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-right: 16px;
+}
+
+.nav-btn {
+  padding: 6px 16px;
+  border-radius: 6px;
+  color: #ccc;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-btn:hover {
+  background: #2e2e3e;
+  color: #fff;
+}
+
+.nav-btn.active {
+  background: #4f46e5;
+  color: #fff;
+}
+
+.content {
+  flex: 1;
+  overflow: hidden;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #888;
+  font-size: 16px;
+}
