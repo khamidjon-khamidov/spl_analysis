@@ -24,6 +24,11 @@ def get_db():
 @app.get("/devices/all")
 def get_all_devices():
     con = get_db()
-    rows = con.execute("SELECT id, name, lat, long FROM devices").fetchall()
+    rows = con.execute("""
+        SELECT id, name, lat, long,
+               data_start, data_end,
+               total_hours, hours_with_data, missing_hours
+        FROM devices
+    """).fetchall()
     con.close()
     return [dict(row) for row in rows]
