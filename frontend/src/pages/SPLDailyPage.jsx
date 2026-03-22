@@ -3,7 +3,14 @@ import Map, { Marker, Popup } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 const MAP_STYLE  = 'https://tiles.openfreemap.org/styles/liberty'
-const MS_PER_SLOT = 300  // 300ms per hour
+
+const SPEEDS = [
+  { label: '1x',  ms: 1000 },
+  { label: '2x',  ms: 700  },
+  { label: '3x',  ms: 500  },
+  { label: '5x',  ms: 300  },
+  { label: '10x', ms: 100  },
+]
 
 const HEALTH_LEVELS = [
   { max: 45,       color: '#22c55e', label: '< 45 dB',  desc: 'Safe'             },
@@ -26,6 +33,7 @@ export default function SPLDailyPage() {
   const [playing, setPlaying]     = useState(false)
   const [loading, setLoading]     = useState(false)
   const [selected, setSelected]   = useState(null)
+  const [speedIdx, setSpeedIdx]   = useState(0)
   const intervalRef = useRef(null)
 
   useEffect(() => {
@@ -56,12 +64,12 @@ export default function SPLDailyPage() {
 
   useEffect(() => {
     if (playing) {
-      intervalRef.current = setInterval(tick, MS_PER_SLOT)
+      intervalRef.current = setInterval(tick, SPEEDS[speedIdx].ms)
     } else {
       clearInterval(intervalRef.current)
     }
     return () => clearInterval(intervalRef.current)
-  }, [playing, tick])
+  }, [playing, tick, speedIdx])
 
   function togglePlay() {
     if (slots.length === 0) return
@@ -152,6 +160,20 @@ export default function SPLDailyPage() {
           <button onClick={togglePlay} disabled={loading || slots.length === 0} style={playBtnStyle}>
             {playing ? '⏸' : '▶'}
           </button>
+          {SPEEDS.map((s, i) => (
+            <button
+              key={s.label}
+              onClick={() => setSpeedIdx(i)}
+              style={{
+                background: speedIdx === i ? '#4f46e5' : '#2a2a3a',
+                color: speedIdx === i ? '#fff' : '#888',
+                border: '1px solid #444', borderRadius: 5,
+                padding: '3px 8px', fontSize: 12, cursor: 'pointer', fontWeight: 600,
+              }}
+            >
+              {s.label}
+            </button>
+          ))}
           <input
             type="range" min={0} max={Math.max(slots.length - 1, 0)} value={slotIdx}
             onChange={handleSlider}
