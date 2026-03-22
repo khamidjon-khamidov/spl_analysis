@@ -1,0 +1,4 @@
+# Large raw data files
+data/raw/*.csv
+data/raw/*.xlsx
+data/SPL.db
