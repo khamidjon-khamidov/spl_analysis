@@ -1,19 +1,22 @@
 import { Routes, Route, NavLink } from 'react-router-dom'
 import DevicesPage from './pages/DevicesPage'
+import SPLStaticPage from './pages/SPLStaticPage'
 import './App.css'
+
+const navClass = ({ isActive }) => isActive ? 'nav-btn active' : 'nav-btn'
 
 function App() {
   return (
     <div className="app">
       <nav className="navbar">
         <span className="brand">SPL</span>
-        <NavLink to="/devices" className={({ isActive }) => isActive ? 'nav-btn active' : 'nav-btn'}>
-          Devices
-        </NavLink>
+        <NavLink to="/devices" className={navClass}>Devices</NavLink>
+        <NavLink to="/spl-static" className={navClass}>SPL Static</NavLink>
       </nav>
       <main className="content">
         <Routes>
           <Route path="/devices" element={<DevicesPage />} />
+          <Route path="/spl-static" element={<SPLStaticPage />} />
           <Route path="*" element={<div className="placeholder">Select a page from the menu.</div>} />
         </Routes>
       </main>
