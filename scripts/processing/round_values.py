@@ -6,7 +6,7 @@ Rounds the value column to integers in both sp_levels and spl_levels_historical_
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "../data/SPL.db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "../../data/SPL.db")
 
 
 def main():

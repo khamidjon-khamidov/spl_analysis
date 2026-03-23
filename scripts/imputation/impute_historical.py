@@ -23,7 +23,7 @@ import statistics
 from collections import defaultdict
 from datetime import datetime, timedelta
 
-DB_PATH      = os.path.join(os.path.dirname(__file__), "../data/SPL.db")
+DB_PATH      = os.path.join(os.path.dirname(__file__), "../../data/SPL.db")
 MAX_LOOKBACK = 10   # maximum number of previous available readings to use
 
 

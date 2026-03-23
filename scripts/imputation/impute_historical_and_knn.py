@@ -36,7 +36,7 @@ import statistics
 from collections import defaultdict
 from datetime import datetime, timedelta
 
-DB_PATH           = os.path.join(os.path.dirname(__file__), "../data/SPL.db")
+DB_PATH           = os.path.join(os.path.dirname(__file__), "../../data/SPL.db")
 PRIMARY_RADIUS_M  = 500
 FALLBACK_RADIUS_M = 1_000
 MIN_NEIGHBOURS    = 3

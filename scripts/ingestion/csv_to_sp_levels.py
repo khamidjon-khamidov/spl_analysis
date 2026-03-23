@@ -19,7 +19,7 @@ from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 
 INPUT_FILE = os.path.join(os.path.dirname(__file__), "../data/raw/all_acoustic_sensor_data_230501_230831.csv")
-OUTPUT_DB  = os.path.join(os.path.dirname(__file__), "../data/SPL.db")
+OUTPUT_DB  = os.path.join(os.path.dirname(__file__), "../../data/SPL.db")
 
 TALLINN = ZoneInfo("Europe/Tallinn")
 

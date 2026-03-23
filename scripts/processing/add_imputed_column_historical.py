@@ -8,7 +8,7 @@ sets imputed = 1 if it does not (i.e. the value was imputed).
 import sqlite3
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "../data/SPL.db")
+DB_PATH = os.path.join(os.path.dirname(__file__), "../../data/SPL.db")
 
 
 def main():
