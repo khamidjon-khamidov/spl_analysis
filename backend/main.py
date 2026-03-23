@@ -1,5 +1,6 @@
-from fastapi import FastAPI, Query
+from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from datetime import datetime, timedelta
 import sqlite3
 import os
 
@@ -21,12 +22,22 @@ def get_db():
     return con
 
 
+def resolve_table(source: str) -> str:
+    if source == "historical":
+        return "spl_levels_historical_imp"
+    return "sp_levels"
+
+
 @app.get("/spl/static")
-def get_spl_static(timestamp: str = Query(..., description="dd-mm-yyyy hh:00")):
+def get_spl_static(
+    timestamp: str = Query(..., description="dd-mm-yyyy hh:00"),
+    source: str = Query("original", description="original | historical"),
+):
+    table = resolve_table(source)
     con = get_db()
-    rows = con.execute("""
-        SELECT d.id, d.name, d.lat, d.long, s.value
-        FROM sp_levels s
+    rows = con.execute(f"""
+        SELECT d.id, d.name, d.lat, d.long, s.value, s.imputed
+        FROM {table} s
         JOIN devices d ON d.id = s.device_id
         WHERE s.timestamp = ?
     """, (timestamp,)).fetchall()
@@ -36,11 +47,10 @@ def get_spl_static(timestamp: str = Query(..., description="dd-mm-yyyy hh:00")):
 
 @app.get("/spl/range")
 def get_spl_range(
-    start: str = Query(..., description="dd-mm-yyyy"),
-    end:   str = Query(..., description="dd-mm-yyyy"),
+    start:  str = Query(..., description="dd-mm-yyyy"),
+    end:    str = Query(..., description="dd-mm-yyyy"),
+    source: str = Query("original", description="original | historical"),
 ):
-    from datetime import datetime, timedelta
-    from fastapi import HTTPException
     def to_date(s):
         try:
             d, m, y = s.split("-")
@@ -53,7 +63,6 @@ def get_spl_range(
     if end_dt < start_dt:
         raise HTTPException(status_code=400, detail="end must be >= start")
 
-    # Build list of all timestamps in range ("dd-mm-yyyy hh:00")
     slots = []
     cur_dt = start_dt
     while cur_dt <= end_dt:
@@ -61,10 +70,11 @@ def get_spl_range(
             slots.append(cur_dt.strftime("%d-%m-%Y") + f" {h:02d}:00")
         cur_dt += timedelta(days=1)
 
+    table = resolve_table(source)
     con = get_db()
-    rows = con.execute("""
-        SELECT d.id, d.name, d.lat, d.long, s.timestamp, s.value
-        FROM sp_levels s
+    rows = con.execute(f"""
+        SELECT d.id, d.name, d.lat, d.long, s.timestamp, s.value, s.imputed
+        FROM {table} s
         JOIN devices d ON d.id = s.device_id
         WHERE s.timestamp >= ? AND s.timestamp <= ?
     """, (slots[0], slots[-1])).fetchall()
@@ -75,18 +85,22 @@ def get_spl_range(
         ts = row["timestamp"]
         by_ts.setdefault(ts, []).append({
             "id": row["id"], "name": row["name"],
-            "lat": row["lat"], "long": row["long"], "value": row["value"]
+            "lat": row["lat"], "long": row["long"], "value": row["value"],
+            "imputed": row["imputed"]
         })
-    # Return ordered list of {timestamp, readings}
     return [{"timestamp": ts, "readings": by_ts.get(ts, [])} for ts in slots]
 
 
 @app.get("/spl/device/{device_id}")
-def get_spl_device(device_id: int):
+def get_spl_device(
+    device_id: int,
+    source: str = Query("original", description="original | historical"),
+):
+    table = resolve_table(source)
     con = get_db()
-    rows = con.execute("""
-        SELECT timestamp, value
-        FROM sp_levels
+    rows = con.execute(f"""
+        SELECT timestamp, value, imputed
+        FROM {table}
         WHERE device_id = ?
         ORDER BY timestamp
     """, (device_id,)).fetchall()

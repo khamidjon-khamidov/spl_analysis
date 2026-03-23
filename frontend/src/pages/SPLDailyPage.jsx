@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useDataSource } from '../DataSourceContext'
 import Map, { Marker, Popup } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
@@ -35,6 +36,7 @@ export default function SPLDailyPage() {
   const [selected, setSelected]   = useState(null)
   const [speedIdx, setSpeedIdx]   = useState(0)
   const intervalRef = useRef(null)
+  const { source } = useDataSource()
 
   useEffect(() => {
     fetch('http://localhost:8000/devices/all')
@@ -50,10 +52,10 @@ export default function SPLDailyPage() {
     setLoading(true)
     const s = toApiDate(startDate)
     const e = toApiDate(endDate)
-    fetch(`http://localhost:8000/spl/range?start=${s}&end=${e}`)
+    fetch(`http://localhost:8000/spl/range?start=${s}&end=${e}&source=${source}`)
       .then(r => r.json())
       .then(data => { setSlots(data); setLoading(false) })
-  }, [startDate, endDate])
+  }, [startDate, endDate, source])
 
   const tick = useCallback(() => {
     setSlotIdx(prev => {
@@ -123,6 +125,11 @@ export default function SPLDailyPage() {
         ))}
         <div style={{ marginTop: 4, borderTop: '1px solid #333', paddingTop: 4 }}>
           <span style={{ color: '#6b7280' }}>●</span> No data
+        </div>
+        <div style={{ marginTop: 6, borderTop: '1px solid #333', paddingTop: 6 }}>
+          <div style={{ fontWeight: 600, marginBottom: 4 }}>Value source</div>
+          <div><span style={{ display:'inline-block', width:8, height:8, borderRadius:1, background:'#9ca3af', marginRight:5 }}/>Original</div>
+          <div><span style={{ display:'inline-block', width:8, height:8, borderRadius:1, background:'#f472b6', marginRight:5 }}/>Imputed</div>
         </div>
       </div>
 
@@ -212,13 +219,18 @@ export default function SPLDailyPage() {
                 background: hasData ? splColor(reading.value) : '#6b7280',
                 color: hasData ? '#111' : '#ddd',
                 fontSize: 10, fontWeight: 600,
-                width: 44, textAlign: 'center',
-                padding: '2px 0', borderRadius: 4,
+                width: 52, padding: '2px 4px', borderRadius: 4,
                 cursor: 'pointer',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
                 opacity: hasData ? 1 : 0.45,
                 transition: 'background-color 0.25s ease, color 0.25s ease, opacity 0.25s ease',
+                display: 'flex', alignItems: 'center', gap: 3,
               }}>
+                <span style={{
+                  width: 6, height: 6, borderRadius: 1, flexShrink: 0,
+                  background: hasData && reading.imputed ? '#f472b6' : '#9ca3af',
+                  transition: 'background 0.25s ease',
+                }} />
                 {hasData ? `${reading.value} dB` : '— dB'}
               </div>
             </Marker>

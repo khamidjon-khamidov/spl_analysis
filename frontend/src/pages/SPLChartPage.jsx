@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDataSource } from '../DataSourceContext'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ReferenceLine, Brush, ResponsiveContainer,
@@ -58,6 +59,7 @@ function DotWithColor({ cx, cy, payload }) {
 }
 
 export default function SPLChartPage() {
+  const { source } = useDataSource()
   const [devices, setDevices]   = useState([])
   const [deviceId, setDeviceId] = useState('')
   const [data, setData]         = useState([])
@@ -72,10 +74,10 @@ export default function SPLChartPage() {
   useEffect(() => {
     if (!deviceId) return
     setLoading(true)
-    fetch(`http://localhost:8000/spl/device/${deviceId}`)
+    fetch(`http://localhost:8000/spl/device/${deviceId}?source=${source}`)
       .then(r => r.json())
       .then(d => { setData(d); setLoading(false) })
-  }, [deviceId])
+  }, [deviceId, source])
 
   const selectedDevice = devices.find(d => d.id === Number(deviceId))
   const [dropdownOpen, setDropdownOpen] = useState(false)

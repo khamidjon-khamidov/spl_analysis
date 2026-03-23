@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useDataSource } from '../DataSourceContext'
 import Map, { Marker, Popup } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
@@ -28,6 +29,7 @@ function toTimestamp(dateStr, hour) {
 }
 
 export default function SPLStaticPage() {
+  const { source } = useDataSource()
   const [date, setDate] = useState('2023-05-01')
   const [hour, setHour] = useState(12)
   const [allDevices, setAllDevices] = useState([])
@@ -46,14 +48,14 @@ export default function SPLStaticPage() {
     const ts = toTimestamp(date, hour)
     setLoading(true)
     setSelected(null)
-    fetch(`http://localhost:8000/spl/static?timestamp=${encodeURIComponent(ts)}`)
+    fetch(`http://localhost:8000/spl/static?timestamp=${encodeURIComponent(ts)}&source=${source}`)
       .then(r => r.json())
       .then(data => {
         setReadings(data)
         setQueried(ts)
         setLoading(false)
       })
-  }, [date, hour])
+  }, [date, hour, source])
 
   // Build a lookup of device_id -> reading for quick access
   const readingById = Object.fromEntries(readings.map(r => [r.id, r]))
@@ -110,6 +112,11 @@ export default function SPLStaticPage() {
         <div style={{ marginTop: 4, borderTop: '1px solid #444', paddingTop: 4 }}>
           <span style={{ color: '#6b7280' }}>●</span> No data
         </div>
+        <div style={{ marginTop: 6, borderTop: '1px solid #444', paddingTop: 6 }}>
+          <div style={{ fontWeight: 600, marginBottom: 4 }}>Value source</div>
+          <div><span style={{ display:'inline-block', width:8, height:8, borderRadius:1, background:'#9ca3af', marginRight:5 }}/>Original</div>
+          <div><span style={{ display:'inline-block', width:8, height:8, borderRadius:1, background:'#f472b6', marginRight:5 }}/>Imputed</div>
+        </div>
       </div>
 
       <Map
@@ -134,15 +141,19 @@ export default function SPLStaticPage() {
               <div style={{
                 background: hasData ? splColor(reading.value) : '#6b7280',
                 color: hasData ? '#111' : '#ddd',
-                fontSize: 10,
-                fontWeight: 600,
-                padding: '2px 6px',
-                borderRadius: 4,
-                whiteSpace: 'nowrap',
-                cursor: 'pointer',
+                fontSize: 10, fontWeight: 600,
+                padding: '2px 6px', borderRadius: 4,
+                whiteSpace: 'nowrap', cursor: 'pointer',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
                 opacity: hasData ? 1 : 0.5,
+                display: 'flex', alignItems: 'center', gap: 3,
               }}>
+                {hasData && (
+                  <span style={{
+                    width: 6, height: 6, borderRadius: 1, flexShrink: 0,
+                    background: reading.imputed ? '#f472b6' : '#9ca3af',
+                  }} />
+                )}
                 {hasData ? `${reading.value} dB` : device.name}
               </div>
             </Marker>
