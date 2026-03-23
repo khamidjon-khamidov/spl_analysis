@@ -25,6 +25,8 @@ def get_db():
 def resolve_table(source: str) -> str:
     if source == "historical":
         return "spl_levels_historical_imp"
+    if source == "knn":
+        return "spl_levels_knn_imp"
     return "sp_levels"
 
 

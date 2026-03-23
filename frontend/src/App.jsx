@@ -11,13 +11,14 @@ const navClass = ({ isActive }) => isActive ? 'nav-btn active' : 'nav-btn'
 const SOURCE_OPTIONS = [
   { value: 'original',   label: 'Original' },
   { value: 'historical', label: 'Historical Median' },
+  { value: 'knn',        label: 'KNN' },
 ]
 
 function SourceDropdown() {
   const { source, setSource } = useDataSource()
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginLeft: 'auto' }}>
-      <span style={{ color: '#888', fontSize: 12 }}>Data source</span>
+      <span style={{ color: '#888', fontSize: 12 }}>Imputation Method</span>
       <select
         value={source}
         onChange={e => setSource(e.target.value)}
