@@ -27,6 +27,8 @@ def resolve_table(source: str) -> str:
         return "spl_levels_historical_imp"
     if source == "knn":
         return "spl_levels_knn_imp"
+    if source == "combined":
+        return "spl_levels_combined_imp"
     return "sp_levels"
 
 

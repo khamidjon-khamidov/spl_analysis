@@ -12,6 +12,7 @@ const SOURCE_OPTIONS = [
   { value: 'original',   label: 'Original' },
   { value: 'historical', label: 'Historical Median' },
   { value: 'knn',        label: 'KNN' },
+  { value: 'combined',   label: 'Historical + KNN' },
 ]
 
 function SourceDropdown() {
