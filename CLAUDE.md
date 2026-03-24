@@ -17,6 +17,9 @@ sound_pressure_level/
 ├── frontend/          # React application
 ├── backend/           # Python backend (API / data serving)
 ├── imputation/        # Python scripts for data imputation
+├── scripts/           # Data ingestion, processing, and runner scripts
+├── timesfm/           # Clone of Google TimesFM (open-source time series foundation model)
+├── docs/              # Project documentation and method explanations
 └── data/
     ├── raw/           # Raw source files (Excel, CSV, etc.)
     └── sql/           # Converted SQL output files (generated)
@@ -24,11 +27,57 @@ sound_pressure_level/
 
 ## Data Pipeline
 
-1. Raw files live in `data/raw/` (e.g., `devices.xlsx`, `event.xlsx`, `imputation_map.xlsx`)
+1. Raw files live in `data/raw/` (e.g., `all_acoustic_sensor_data_210901_211231.csv`)
 2. Imputation scripts in `imputation/` process and fill missing values
 3. Processed data is converted to SQL and written to `data/sql/`
 4. The Python backend serves the data from `data/sql/`
 5. The React frontend visualizes the data
+
+## External Models
+
+- **`timesfm/`** — Local clone of [Google TimesFM](https://github.com/google-research/timesfm), an open-source time series foundation model. Used for time series forecasting/imputation experiments on SPL data. Do not modify files inside this directory.
+
+## Database Layout (`data/SPL.db` — SQLite)
+
+### `devices`
+| Column | Type | Notes |
+|---|---|---|
+| `id` | INTEGER PK | Auto-assigned, sorted by name |
+| `name` | TEXT UNIQUE | Sensor name |
+| `lat` | REAL | Latitude |
+| `long` | REAL | Longitude |
+| `data_start` | TEXT | `'YYYY-MM-DD HH:MM:SS UTC'` of first reading |
+| `data_end` | TEXT | `'YYYY-MM-DD HH:MM:SS UTC'` of last reading |
+| `total_hours` | INTEGER | Hours between data_start and data_end inclusive |
+| `hours_with_data` | INTEGER | Distinct hours with at least one reading |
+| `missing_hours` | INTEGER | `total_hours - hours_with_data` |
+
+### `sp_levels` — original aggregated readings
+| Column | Type | Notes |
+|---|---|---|
+| `id` | INTEGER PK | |
+| `device_id` | INTEGER FK | → `devices(id)` |
+| `timestamp` | TEXT | `'dd-mm-yyyy hh:00'` Estonian time (Europe/Tallinn) |
+| `ts_indexed` | INTEGER | Unix timestamp (UTC seconds) of the hour — **indexed** |
+| `value` | INTEGER | Hourly median dB, rounded to integer |
+| `imputed` | INTEGER | Always `0` (all rows are original) |
+
+Indexes: `idx_sp_levels_ts` on `ts_indexed`, `idx_sp_levels_device` on `device_id`
+
+### Imputation tables
+All three share the same schema as `sp_levels`. `imputed = 0` means copied from original, `imputed = 1` means filled by the method.
+
+| Table | Method |
+|---|---|
+| `spl_levels_historical_imp` | Median of last 10 available same-hour readings from previous days |
+| `spl_levels_knn_imp` | Median of spatial neighbours ≤500 m (fallback ≤1 km) at same timestamp |
+| `spl_levels_combined_imp` | Inverse-variance weighted blend of historical + KNN |
+
+Indexes on each: `ts_indexed` and `device_id`
+
+### Timestamp conventions
+- `timestamp` TEXT column: `'dd-mm-yyyy hh:00'` in **Tallinn local time** (Europe/Tallinn, EEST=UTC+3 / EET=UTC+2)
+- `ts_indexed` INTEGER: Unix UTC seconds of that same hour — use this for all range queries and arithmetic
 
 ## Conventions
 

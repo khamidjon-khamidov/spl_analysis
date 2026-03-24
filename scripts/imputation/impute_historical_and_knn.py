@@ -22,11 +22,12 @@ For every (device, hour) slot between a device's data_start and data_end:
 See docs/historical_knn.md for the theoretical background.
 
 Columns:
-  id         INTEGER  PK
-  device_id  INTEGER  FK -> devices(id)
-  timestamp  TEXT     'dd-mm-yyyy hh:00' Estonian time
-  value      REAL     (rounded to integer)
-  imputed    INTEGER  0 = original, 1 = imputed
+  id          INTEGER  PK
+  device_id   INTEGER  FK -> devices(id)
+  timestamp   TEXT     'dd-mm-yyyy hh:00' Estonian time
+  ts_indexed  INTEGER  Unix timestamp (UTC seconds) — indexed for fast range queries
+  value       INTEGER  rounded to integer
+  imputed     INTEGER  0 = original, 1 = imputed
 """
 
 import sqlite3
@@ -35,8 +36,10 @@ import math
 import statistics
 from collections import defaultdict
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 DB_PATH           = os.path.join(os.path.dirname(__file__), "../../data/SPL.db")
+TALLINN           = ZoneInfo("Europe/Tallinn")
 PRIMARY_RADIUS_M  = 500
 FALLBACK_RADIUS_M = 1_000
 MIN_NEIGHBOURS    = 3
@@ -46,6 +49,12 @@ DEFAULT_VAR       = 100.0  # dB² assigned when only 1 sample (variance undefine
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
+
+def ts_to_unix(ts_str):
+    """'dd-mm-yyyy hh:00' (Tallinn local) -> Unix timestamp (UTC seconds)"""
+    dt = datetime.strptime(ts_str, "%d-%m-%Y %H:00").replace(tzinfo=TALLINN)
+    return int(dt.timestamp())
+
 
 def haversine(lat1, lon1, lat2, lon2):
     R = 6_371_000
@@ -121,14 +130,14 @@ def main():
 
     # ── Load original readings ───────────────────────────────────────────────
     print("Loading sp_levels …")
-    cur.execute("SELECT device_id, timestamp, value FROM sp_levels")
+    cur.execute("SELECT device_id, timestamp, ts_indexed, value FROM sp_levels")
 
-    existing  = {}                   # (device_id, ts) -> value
+    existing  = {}                   # (device_id, ts) -> (value, ts_indexed)
     by_hour   = defaultdict(list)    # (device_id, hour_int) -> [(datetime, value)]
     ts_lookup = {}                   # ts -> {device_id: value}
 
-    for device_id, ts, value in cur.fetchall():
-        existing[(device_id, ts)] = value
+    for device_id, ts, ts_indexed, value in cur.fetchall():
+        existing[(device_id, ts)] = (value, ts_indexed)
         dt = datetime.strptime(ts, "%d-%m-%Y %H:00")
         by_hour[(device_id, dt.hour)].append((dt, value))
         ts_lookup.setdefault(ts, {})[device_id] = value
@@ -144,7 +153,7 @@ def main():
 
     # ── Build output rows ────────────────────────────────────────────────────
     print("Imputing missing slots …")
-    rows  = []
+    rows  = []   # (device_id, ts, ts_indexed, value, imputed)
     stats = {
         "copied":       0,
         "both":         0,   # blended from hist + knn
@@ -162,7 +171,8 @@ def main():
             ts = cur_dt.strftime("%d-%m-%Y %H:00")
 
             if (device_id, ts) in existing:
-                rows.append((device_id, ts, round(existing[(device_id, ts)]), 0))
+                value, ts_idx = existing[(device_id, ts)]
+                rows.append((device_id, ts, ts_idx, round(value), 0))
                 stats["copied"] += 1
             else:
                 # Historical samples
@@ -186,7 +196,7 @@ def main():
                 if value is None:
                     stats["skipped"] += 1
                 else:
-                    rows.append((device_id, ts, round(value), 1))
+                    rows.append((device_id, ts, ts_to_unix(ts), round(value), 1))
                     if used_hist and used_knn:
                         stats["both"] += 1
                     elif used_hist:
@@ -207,15 +217,18 @@ def main():
     cur.execute("DROP TABLE IF EXISTS spl_levels_combined_imp")
     cur.execute("""
         CREATE TABLE spl_levels_combined_imp (
-            id        INTEGER PRIMARY KEY AUTOINCREMENT,
-            device_id INTEGER NOT NULL REFERENCES devices(id),
-            timestamp TEXT    NOT NULL,
-            value     REAL    NOT NULL,
-            imputed   INTEGER NOT NULL DEFAULT 0
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            device_id   INTEGER NOT NULL REFERENCES devices(id),
+            timestamp   TEXT    NOT NULL,
+            ts_indexed  INTEGER NOT NULL,
+            value       INTEGER NOT NULL,
+            imputed     INTEGER NOT NULL DEFAULT 0
         )
     """)
+    cur.execute("CREATE INDEX idx_combined_ts     ON spl_levels_combined_imp (ts_indexed)")
+    cur.execute("CREATE INDEX idx_combined_device ON spl_levels_combined_imp (device_id)")
     cur.executemany(
-        "INSERT INTO spl_levels_combined_imp (device_id, timestamp, value, imputed) VALUES (?, ?, ?, ?)",
+        "INSERT INTO spl_levels_combined_imp (device_id, timestamp, ts_indexed, value, imputed) VALUES (?, ?, ?, ?, ?)",
         rows,
     )
     con.commit()

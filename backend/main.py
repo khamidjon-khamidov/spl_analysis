@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
+from zoneinfo import ZoneInfo
 import sqlite3
 import os
 
@@ -110,6 +111,19 @@ def get_spl_device(
     """, (device_id,)).fetchall()
     con.close()
     return [dict(row) for row in rows]
+
+
+@app.get("/spl/date-range")
+def get_date_range():
+    con = get_db()
+    row = con.execute("SELECT MIN(ts_indexed), MAX(ts_indexed) FROM sp_levels").fetchone()
+    con.close()
+    if not row or row[0] is None:
+        raise HTTPException(status_code=404, detail="No data in sp_levels")
+    tallinn = ZoneInfo("Europe/Tallinn")
+    min_date = datetime.fromtimestamp(row[0], tz=tallinn).strftime("%Y-%m-%d")
+    max_date = datetime.fromtimestamp(row[1], tz=tallinn).strftime("%Y-%m-%d")
+    return {"min_date": min_date, "max_date": max_date}
 
 
 @app.get("/devices/all")

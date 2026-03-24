@@ -10,11 +10,12 @@ For every (device, hour) slot between a device's data_start and data_end:
   - If no previous readings exist at all → skip (leave missing)
 
 Columns:
-  id         INTEGER  PK
-  device_id  INTEGER  FK -> devices(id)
-  timestamp  TEXT     'dd-mm-yyyy hh:00' Estonian time
-  value      REAL
-  imputed    INTEGER  0 = original, 1 = imputed
+  id          INTEGER  PK
+  device_id   INTEGER  FK -> devices(id)
+  timestamp   TEXT     'dd-mm-yyyy hh:00' Estonian time
+  ts_indexed  INTEGER  Unix timestamp (UTC seconds) — indexed for fast range queries
+  value       INTEGER  rounded to integer
+  imputed     INTEGER  0 = original, 1 = imputed
 """
 
 import sqlite3
@@ -22,19 +23,27 @@ import os
 import statistics
 from collections import defaultdict
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 DB_PATH      = os.path.join(os.path.dirname(__file__), "../../data/SPL.db")
-MAX_LOOKBACK = 10   # maximum number of previous available readings to use
+MAX_LOOKBACK = 10
+TALLINN      = ZoneInfo("Europe/Tallinn")
 
 
 def parse_ts(ts):
-    """'dd-mm-yyyy hh:00' -> datetime"""
+    """'dd-mm-yyyy hh:00' -> naive datetime (used for chronological comparisons only)"""
     return datetime.strptime(ts, "%d-%m-%Y %H:00")
 
 
 def fmt_ts(dt):
-    """datetime -> 'dd-mm-yyyy hh:00'"""
+    """naive datetime -> 'dd-mm-yyyy hh:00'"""
     return dt.strftime("%d-%m-%Y %H:00")
+
+
+def ts_to_unix(ts_str):
+    """'dd-mm-yyyy hh:00' (Tallinn local) -> Unix timestamp (UTC seconds)"""
+    dt = datetime.strptime(ts_str, "%d-%m-%Y %H:00").replace(tzinfo=TALLINN)
+    return int(dt.timestamp())
 
 
 def main():
@@ -43,18 +52,16 @@ def main():
 
     # ── Load existing readings ───────────────────────────────────────────────
     print("Loading sp_levels …")
-    cur.execute("SELECT device_id, timestamp, value FROM sp_levels")
+    cur.execute("SELECT device_id, timestamp, ts_indexed, value FROM sp_levels")
 
-    existing   = {}                        # (device_id, ts_str)  -> value
-    # (device_id, hour_int) -> sorted list of (datetime, value)
-    by_hour    = defaultdict(list)
+    existing = {}            # (device_id, ts_str) -> (value, ts_indexed)
+    by_hour  = defaultdict(list)   # (device_id, hour_int) -> [(naive_dt, value)]
 
-    for device_id, ts, value in cur.fetchall():
-        existing[(device_id, ts)] = value
+    for device_id, ts, ts_indexed, value in cur.fetchall():
+        existing[(device_id, ts)] = (value, ts_indexed)
         dt = parse_ts(ts)
         by_hour[(device_id, dt.hour)].append((dt, value))
 
-    # Sort each bucket chronologically once
     for key in by_hour:
         by_hour[key].sort(key=lambda x: x[0])
 
@@ -66,7 +73,7 @@ def main():
 
     # ── Build output rows ────────────────────────────────────────────────────
     print("Imputing missing slots …")
-    rows  = []          # (device_id, ts_str, value, imputed)
+    rows  = []   # (device_id, ts_str, ts_indexed, value, imputed)
     stats = {"copied": 0, "imputed": 0, "skipped": 0}
 
     for device_id, data_start, data_end in devices:
@@ -79,18 +86,16 @@ def main():
             key = (device_id, ts)
 
             if key in existing:
-                rows.append((device_id, ts, existing[key], 0))
+                value, ts_indexed = existing[key]
+                rows.append((device_id, ts, ts_indexed, round(value), 0))
                 stats["copied"] += 1
             else:
-                # Collect up to MAX_LOOKBACK readings for same hour on previous days
-                bucket = by_hour.get((device_id, cur_dt.hour), [])
-                # Keep only entries strictly before cur_dt, take the most recent ones
+                bucket   = by_hour.get((device_id, cur_dt.hour), [])
                 previous = [v for dt, v in bucket if dt < cur_dt]
-                lookback = previous[-MAX_LOOKBACK:]  # last N available
+                lookback = previous[-MAX_LOOKBACK:]
 
                 if lookback:
-                    imputed_value = statistics.median(lookback)
-                    rows.append((device_id, ts, imputed_value, 1))
+                    rows.append((device_id, ts, ts_to_unix(ts), round(statistics.median(lookback)), 1))
                     stats["imputed"] += 1
                 else:
                     stats["skipped"] += 1
@@ -106,17 +111,20 @@ def main():
     cur.execute("DROP TABLE IF EXISTS spl_levels_historical_imp")
     cur.execute("""
         CREATE TABLE spl_levels_historical_imp (
-            id         INTEGER PRIMARY KEY AUTOINCREMENT,
-            device_id  INTEGER NOT NULL REFERENCES devices(id),
-            timestamp  TEXT    NOT NULL,
-            value      REAL    NOT NULL,
-            imputed    INTEGER NOT NULL DEFAULT 0
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            device_id   INTEGER NOT NULL REFERENCES devices(id),
+            timestamp   TEXT    NOT NULL,
+            ts_indexed  INTEGER NOT NULL,
+            value       INTEGER NOT NULL,
+            imputed     INTEGER NOT NULL DEFAULT 0
         )
     """)
+    cur.execute("CREATE INDEX idx_hist_ts     ON spl_levels_historical_imp (ts_indexed)")
+    cur.execute("CREATE INDEX idx_hist_device ON spl_levels_historical_imp (device_id)")
     cur.executemany(
-        "INSERT INTO spl_levels_historical_imp (device_id, timestamp, value, imputed) "
-        "VALUES (?, ?, ?, ?)",
-        rows
+        "INSERT INTO spl_levels_historical_imp (device_id, timestamp, ts_indexed, value, imputed) "
+        "VALUES (?, ?, ?, ?, ?)",
+        rows,
     )
     con.commit()
     con.close()

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useDataSource } from '../DataSourceContext'
+import { useDateRange } from '../useDateRange'
 import Map, { Marker, Popup } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
@@ -30,13 +31,16 @@ function toTimestamp(dateStr, hour) {
 
 export default function SPLStaticPage() {
   const { source } = useDataSource()
-  const [date, setDate] = useState('2023-05-01')
+  const { minDate, maxDate } = useDateRange()
+  const [date, setDate] = useState(null)
   const [hour, setHour] = useState(12)
   const [allDevices, setAllDevices] = useState([])
   const [readings, setReadings] = useState([])
   const [selected, setSelected] = useState(null)
   const [loading, setLoading] = useState(false)
   const [queried, setQueried] = useState(null)
+
+  useEffect(() => { if (minDate && !date) setDate(minDate) }, [minDate])
 
   useEffect(() => {
     fetch('http://localhost:8000/devices/all')
@@ -45,6 +49,7 @@ export default function SPLStaticPage() {
   }, [])
 
   useEffect(() => {
+    if (!date) return
     const ts = toTimestamp(date, hour)
     setLoading(true)
     setSelected(null)
@@ -76,8 +81,8 @@ export default function SPLStaticPage() {
         <input
           type="date"
           value={date}
-          min="2023-05-01"
-          max="2023-08-31"
+          min={minDate ?? ''}
+          max={maxDate ?? ''}
           onChange={e => setDate(e.target.value)}
           style={inputStyle}
         />

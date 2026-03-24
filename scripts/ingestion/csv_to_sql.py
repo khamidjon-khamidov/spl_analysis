@@ -14,7 +14,7 @@ import csv
 import sqlite3
 import os
 
-INPUT_FILE = os.path.join(os.path.dirname(__file__), "../data/raw/all_acoustic_sensor_data_230501_230831.csv")
+INPUT_FILE = os.path.join(os.path.dirname(__file__), "../../data/raw/all_acoustic_sensor_data_210901_211231.csv")
 OUTPUT_DB  = os.path.join(os.path.dirname(__file__), "../../data/SPL.db")
 
 # Tolerance in degrees (~1 metre at these latitudes)

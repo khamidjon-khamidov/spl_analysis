@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useDataSource } from '../DataSourceContext'
+import { useDateRange } from '../useDateRange'
 import Map, { Marker, Popup } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
@@ -26,8 +27,9 @@ function splColor(v) { return HEALTH_LEVELS.find(l => v < l.max).color }
 function toApiDate(s) { const [y, m, d] = s.split('-'); return `${d}-${m}-${y}` }
 
 export default function SPLDailyPage() {
-  const [startDate, setStartDate] = useState('2023-05-01')
-  const [endDate, setEndDate]     = useState('2023-05-03')
+  const { minDate, maxDate } = useDateRange()
+  const [startDate, setStartDate] = useState(null)
+  const [endDate, setEndDate]     = useState(null)
   const [allDevices, setAllDevices] = useState([])
   const [slots, setSlots]         = useState([])   // [{timestamp, readings}]
   const [slotIdx, setSlotIdx]     = useState(0)
@@ -37,6 +39,16 @@ export default function SPLDailyPage() {
   const [speedIdx, setSpeedIdx]   = useState(0)
   const intervalRef = useRef(null)
   const { source } = useDataSource()
+
+  useEffect(() => {
+    if (minDate && !startDate) {
+      setStartDate(minDate)
+      // default end = minDate + 2 days
+      const end = new Date(minDate)
+      end.setDate(end.getDate() + 2)
+      setEndDate(end.toISOString().slice(0, 10))
+    }
+  }, [minDate])
 
   useEffect(() => {
     fetch('http://localhost:8000/devices/all')
@@ -144,13 +156,13 @@ export default function SPLDailyPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <label style={{ color: '#aaa', fontSize: 12 }}>From</label>
           <input
-            type="date" value={startDate} min="2023-05-01" max="2023-08-31"
+            type="date" value={startDate ?? ''} min={minDate ?? ''} max={maxDate ?? ''}
             onChange={e => setStartDate(e.target.value)}
             style={inputStyle}
           />
           <label style={{ color: '#aaa', fontSize: 12 }}>To</label>
           <input
-            type="date" value={endDate} min="2023-05-01" max="2023-08-31"
+            type="date" value={endDate ?? ''} min={minDate ?? ''} max={maxDate ?? ''}
             onChange={e => setEndDate(e.target.value)}
             style={inputStyle}
           />
