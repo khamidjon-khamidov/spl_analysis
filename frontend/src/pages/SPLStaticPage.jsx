@@ -147,18 +147,16 @@ export default function SPLStaticPage() {
                 background: hasData ? splColor(reading.value) : '#6b7280',
                 color: hasData ? '#111' : '#ddd',
                 fontSize: 10, fontWeight: 600,
-                padding: '2px 6px', borderRadius: 4,
+                padding: '2px 6px 2px 12px', borderRadius: 4,
                 whiteSpace: 'nowrap', cursor: 'pointer',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
                 opacity: hasData ? 1 : 0.5,
-                display: 'flex', alignItems: 'center', gap: 3,
+                position: 'relative', overflow: 'hidden',
               }}>
-                {hasData && (
-                  <span style={{
-                    width: 6, height: 6, borderRadius: 1, flexShrink: 0,
-                    background: reading.imputed ? '#f472b6' : '#9ca3af',
-                  }} />
-                )}
+                <span style={{
+                  position: 'absolute', left: 0, top: 0, bottom: 0, width: 6,
+                  background: hasData && reading.imputed ? '#f472b6' : '#9ca3af',
+                }} />
                 {hasData ? `${reading.value} dB` : device.name}
               </div>
             </Marker>

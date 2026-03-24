@@ -231,15 +231,15 @@ export default function SPLDailyPage() {
                 background: hasData ? splColor(reading.value) : '#6b7280',
                 color: hasData ? '#111' : '#ddd',
                 fontSize: 10, fontWeight: 600,
-                width: 52, padding: '2px 4px', borderRadius: 4,
+                width: 52, padding: '2px 4px 2px 12px', borderRadius: 4,
                 cursor: 'pointer',
                 boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
                 opacity: hasData ? 1 : 0.45,
                 transition: 'background-color 0.25s ease, color 0.25s ease, opacity 0.25s ease',
-                display: 'flex', alignItems: 'center', gap: 3,
+                position: 'relative', overflow: 'hidden',
               }}>
                 <span style={{
-                  width: 6, height: 6, borderRadius: 1, flexShrink: 0,
+                  position: 'absolute', left: 0, top: 0, bottom: 0, width: 6,
                   background: hasData && reading.imputed ? '#f472b6' : '#9ca3af',
                   transition: 'background 0.25s ease',
                 }} />
