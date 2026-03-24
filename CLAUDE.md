@@ -54,6 +54,7 @@ sound_pressure_level/
 | `hist_hours_filled` | INTEGER | Rows in `spl_levels_historical_imp` for this device |
 | `knn_hours_filled` | INTEGER | Rows in `spl_levels_knn_imp` for this device |
 | `combined_hours_filled` | INTEGER | Rows in `spl_levels_combined_imp` for this device |
+| `timesfm_hours_filled` | INTEGER | Rows in `spl_levels_timesfm_imp` for this device |
 
 ### `sp_levels` — original aggregated readings
 | Column | Type | Notes |
@@ -75,6 +76,7 @@ All three share the same schema as `sp_levels`. `imputed = 0` means copied from 
 | `spl_levels_historical_imp` | Median of last 10 available same-hour readings from previous days |
 | `spl_levels_knn_imp` | Median of spatial neighbours ≤500 m (fallback ≤1 km) at same timestamp |
 | `spl_levels_combined_imp` | Inverse-variance weighted blend of historical + KNN |
+| `spl_levels_timesfm_imp` | Combined table as base; statistically-imputed slots re-imputed with Google TimesFM 2.5. `imputed=0` original, `imputed=1` kept statistical (< 72h context), `imputed=2` TimesFM |
 
 Indexes on each: `ts_indexed` and `device_id`
 

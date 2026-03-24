@@ -30,6 +30,8 @@ def resolve_table(source: str) -> str:
         return "spl_levels_knn_imp"
     if source == "combined":
         return "spl_levels_combined_imp"
+    if source == "timesfm":
+        return "spl_levels_timesfm_imp"
     return "sp_levels"
 
 
@@ -133,7 +135,7 @@ def get_all_devices():
         SELECT id, name, lat, long,
                data_start, data_end,
                total_hours, hours_with_data, missing_hours,
-               hist_hours_filled, knn_hours_filled, combined_hours_filled
+               hist_hours_filled, knn_hours_filled, combined_hours_filled, timesfm_hours_filled
         FROM devices
     """).fetchall()
     con.close()

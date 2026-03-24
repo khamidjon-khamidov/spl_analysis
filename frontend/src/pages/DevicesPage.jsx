@@ -11,6 +11,7 @@ const FILLED_COL = {
   historical: 'hist_hours_filled',
   knn:        'knn_hours_filled',
   combined:   'combined_hours_filled',
+  timesfm:    'timesfm_hours_filled',
 }
 
 function missingPct(device, source) {
@@ -128,6 +129,7 @@ export default function DevicesPage() {
                   { label: 'Historical', filled: selected.hist_hours_filled },
                   { label: 'KNN',        filled: selected.knn_hours_filled },
                   { label: 'Combined',   filled: selected.combined_hours_filled },
+                  { label: 'TimesFM',    filled: selected.timesfm_hours_filled },
                 ].map(({ label, filled }) => {
                   const missing = selected.total_hours - filled
                   const pctFilled = selected.total_hours ? (filled / selected.total_hours * 100) : 0
