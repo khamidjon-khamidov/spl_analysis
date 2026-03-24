@@ -51,6 +51,9 @@ sound_pressure_level/
 | `total_hours` | INTEGER | Hours between data_start and data_end inclusive |
 | `hours_with_data` | INTEGER | Distinct hours with at least one reading |
 | `missing_hours` | INTEGER | `total_hours - hours_with_data` |
+| `hist_hours_filled` | INTEGER | Rows in `spl_levels_historical_imp` for this device |
+| `knn_hours_filled` | INTEGER | Rows in `spl_levels_knn_imp` for this device |
+| `combined_hours_filled` | INTEGER | Rows in `spl_levels_combined_imp` for this device |
 
 ### `sp_levels` — original aggregated readings
 | Column | Type | Notes |

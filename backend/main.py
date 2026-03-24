@@ -132,7 +132,8 @@ def get_all_devices():
     rows = con.execute("""
         SELECT id, name, lat, long,
                data_start, data_end,
-               total_hours, hours_with_data, missing_hours
+               total_hours, hours_with_data, missing_hours,
+               hist_hours_filled, knn_hours_filled, combined_hours_filled
         FROM devices
     """).fetchall()
     con.close()
