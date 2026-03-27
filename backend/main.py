@@ -135,7 +135,8 @@ def get_all_devices():
         SELECT id, name, lat, long,
                data_start, data_end,
                total_hours, hours_with_data, missing_hours,
-               hist_hours_filled, knn_hours_filled, combined_hours_filled, timesfm_hours_filled
+               hist_hours_filled, knn_hours_filled, combined_hours_filled, timesfm_hours_filled,
+               is_test
         FROM devices
     """).fetchall()
     con.close()

@@ -66,6 +66,13 @@ export default function DevicesPage() {
         <div><span style={{ color: '#22c55e' }}>●</span> &lt; 20%</div>
         <div><span style={{ color: '#f59e0b' }}>●</span> 20 – 50%</div>
         <div><span style={{ color: '#ef4444' }}>●</span> &gt; 50%</div>
+        <div style={{ marginTop: 6, borderTop: '1px solid #444', paddingTop: 6 }}>
+          <div style={{ fontWeight: 600, marginBottom: 4 }}>Evaluation</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ display: 'inline-block', width: 6, height: 12, borderRadius: 1, background: '#3b82f6' }} />
+            Test device
+          </div>
+        </div>
       </div>
 
       <Map
@@ -87,12 +94,20 @@ export default function DevicesPage() {
                 background: color,
                 color: '#fff',
                 fontSize: 10,
-                padding: '2px 6px',
+                padding: device.is_test ? '2px 6px 2px 12px' : '2px 6px',
                 borderRadius: 4,
                 whiteSpace: 'nowrap',
                 cursor: 'pointer',
-                boxShadow: '0 1px 4px rgba(0,0,0,0.4)'
+                boxShadow: '0 1px 4px rgba(0,0,0,0.4)',
+                position: 'relative',
+                overflow: 'hidden',
               }}>
+                {device.is_test && (
+                  <span style={{
+                    position: 'absolute', left: 0, top: 0, bottom: 0, width: 6,
+                    background: '#3b82f6',
+                  }} />
+                )}
                 {device.name}
               </div>
             </Marker>

@@ -1,0 +1,17 @@
+scope,method,n,mae,rmse
+ALL,historical,17170,3.3227,4.7923
+ALL,knn,17317,3.5401,5.0666
+ALL,combined,17317,2.6998,4.1
+ALL,timesfm,16839,1.1833,1.7986
+A-Connected,historical,8502,3.3931,4.9739
+A-Connected,knn,8563,4.1161,5.7804
+A-Connected,combined,8563,2.9834,4.5379
+A-Connected,timesfm,8358,1.2022,1.8546
+B-Isolated,historical,5667,3.4296,4.7013
+B-Isolated,knn,5708,3.1991,4.5276
+B-Isolated,combined,5708,2.527,3.6704
+B-Isolated,timesfm,5582,1.1772,1.7375
+C-ShortHistory,historical,3001,2.9215,4.424
+C-ShortHistory,knn,3046,2.5601,3.6869
+C-ShortHistory,combined,3046,2.2266,3.5262
+C-ShortHistory,timesfm,2899,1.1404,1.7494
