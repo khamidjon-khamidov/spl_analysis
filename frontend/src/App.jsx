@@ -4,6 +4,7 @@ import DevicesPage from './pages/DevicesPage'
 import SPLStaticPage from './pages/SPLStaticPage'
 import SPLDailyPage from './pages/SPLDailyPage'
 import SPLChartPage from './pages/SPLChartPage'
+import EvaluationPage from './pages/EvaluationPage'
 import './App.css'
 
 const navClass = ({ isActive }) => isActive ? 'nav-btn active' : 'nav-btn'
@@ -48,6 +49,7 @@ function App() {
           <NavLink to="/spl-static" className={navClass}>SPL Static</NavLink>
           <NavLink to="/spl-daily"  className={navClass}>SPL Daily Analysis</NavLink>
           <NavLink to="/spl-chart"  className={navClass}>SPL Chart</NavLink>
+          <NavLink to="/compare"    className={navClass}>Compare</NavLink>
           <SourceDropdown />
         </nav>
         <main className="content">
@@ -56,6 +58,7 @@ function App() {
             <Route path="/spl-static" element={<SPLStaticPage />} />
             <Route path="/spl-daily"  element={<SPLDailyPage />} />
             <Route path="/spl-chart"  element={<SPLChartPage />} />
+            <Route path="/compare"    element={<EvaluationPage />} />
             <Route path="*" element={<div className="placeholder">Select a page from the menu.</div>} />
           </Routes>
         </main>

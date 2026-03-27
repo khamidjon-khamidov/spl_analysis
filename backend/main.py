@@ -3,9 +3,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
 import sqlite3
+import csv
 import os
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "../data/SPL.db")
+DB_PATH      = os.path.join(os.path.dirname(__file__), "../data/SPL.db")
+SUMMARY_CSV  = os.path.join(os.path.dirname(__file__), "../data/evaluation_summary.csv")
+RESULTS_CSV  = os.path.join(os.path.dirname(__file__), "../data/evaluation_results.csv")
 
 app = FastAPI()
 
@@ -126,6 +129,47 @@ def get_date_range():
     min_date = datetime.fromtimestamp(row[0], tz=tallinn).strftime("%Y-%m-%d")
     max_date = datetime.fromtimestamp(row[1], tz=tallinn).strftime("%Y-%m-%d")
     return {"min_date": min_date, "max_date": max_date}
+
+
+@app.get("/evaluation/summary")
+def get_evaluation_summary():
+    if not os.path.exists(SUMMARY_CSV):
+        raise HTTPException(status_code=404, detail="evaluation_summary.csv not found")
+    with open(SUMMARY_CSV, newline="") as f:
+        rows = list(csv.DictReader(f))
+    for r in rows:
+        r["n"]    = int(r["n"])
+        r["mae"]  = float(r["mae"])  if r["mae"]  else None
+        r["rmse"] = float(r["rmse"]) if r["rmse"] else None
+    return rows
+
+
+@app.get("/evaluation/per-device")
+def get_evaluation_per_device():
+    if not os.path.exists(RESULTS_CSV):
+        raise HTTPException(status_code=404, detail="evaluation_results.csv not found")
+    methods = ["historical", "knn", "combined", "timesfm"]
+    device_stats = {}
+    with open(RESULTS_CSV, newline="") as f:
+        for row in csv.DictReader(f):
+            key = (int(row["device_id"]), row["name"], row["group"])
+            if key not in device_stats:
+                device_stats[key] = {m: [] for m in methods}
+            true_val = float(row["true_value"])
+            for m in methods:
+                if row[m]:
+                    device_stats[key][m].append(abs(true_val - float(row[m])))
+
+    result = []
+    for (device_id, name, group), errs in device_stats.items():
+        entry = {"device_id": device_id, "name": name, "group": group}
+        for m in methods:
+            vals = errs[m]
+            entry[f"{m}_mae"]  = round(sum(vals) / len(vals), 3) if vals else None
+            entry[f"{m}_n"]    = len(vals)
+        result.append(entry)
+    result.sort(key=lambda x: x["name"])
+    return result
 
 
 @app.get("/devices/all")
