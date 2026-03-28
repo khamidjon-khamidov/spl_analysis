@@ -131,6 +131,154 @@ def get_date_range():
     return {"min_date": min_date, "max_date": max_date}
 
 
+@app.get("/analysis/by-hour")
+def get_by_hour(source: str = Query("original")):
+    """Average SPL per hour-of-day, split by weekday vs weekend (Tallinn local time)."""
+    table = resolve_table(source)
+    con = get_db()
+    rows = con.execute(f"""
+        SELECT
+            CAST(substr(timestamp, 12, 2) AS INTEGER) AS hour,
+            strftime('%w',
+                substr(timestamp, 7, 4) || '-' ||
+                substr(timestamp, 4, 2) || '-' ||
+                substr(timestamp, 1, 2)
+            ) AS dow,
+            AVG(value) AS avg_spl,
+            COUNT(*)   AS n
+        FROM {table}
+        GROUP BY hour, dow
+    """).fetchall()
+    con.close()
+    by_hour = {}
+    for r in rows:
+        h = r["hour"]
+        if h not in by_hour:
+            by_hour[h] = {"hour": h, "wd_sum": 0, "wd_n": 0, "we_sum": 0, "we_n": 0}
+        if r["dow"] in ("0", "6"):
+            by_hour[h]["we_sum"] += r["avg_spl"] * r["n"]
+            by_hour[h]["we_n"]  += r["n"]
+        else:
+            by_hour[h]["wd_sum"] += r["avg_spl"] * r["n"]
+            by_hour[h]["wd_n"]  += r["n"]
+    return [
+        {
+            "hour":    h,
+            "weekday": round(d["wd_sum"] / d["wd_n"], 2) if d["wd_n"] else None,
+            "weekend": round(d["we_sum"] / d["we_n"], 2) if d["we_n"] else None,
+        }
+        for h, d in sorted(by_hour.items())
+    ]
+
+
+@app.get("/analysis/dow-hour-heatmap")
+def get_dow_hour_heatmap(source: str = Query("original")):
+    """Average SPL per (day-of-week, hour) cell for a 7×24 heatmap."""
+    table = resolve_table(source)
+    con = get_db()
+    rows = con.execute(f"""
+        SELECT
+            CAST(strftime('%w',
+                substr(timestamp, 7, 4) || '-' ||
+                substr(timestamp, 4, 2) || '-' ||
+                substr(timestamp, 1, 2)
+            ) AS INTEGER)                       AS dow,
+            CAST(substr(timestamp, 12, 2) AS INTEGER) AS hour,
+            ROUND(AVG(value), 2)                AS avg_spl
+        FROM {table}
+        GROUP BY dow, hour
+    """).fetchall()
+    con.close()
+    return [dict(r) for r in rows]
+
+
+@app.get("/analysis/distribution")
+def get_distribution(source: str = Query("original")):
+    """Count of readings per 2-dB bucket from 28 to 94 dB."""
+    table = resolve_table(source)
+    con = get_db()
+    rows = con.execute(f"""
+        SELECT
+            (CAST(value AS INTEGER) / 2) * 2 AS bucket,
+            COUNT(*)                          AS count
+        FROM {table}
+        GROUP BY bucket
+        ORDER BY bucket
+    """).fetchall()
+    con.close()
+    return [dict(r) for r in rows]
+
+
+@app.get("/analysis/daily-trend")
+def get_daily_trend(source: str = Query("original")):
+    """Daily average SPL across all devices over the study period."""
+    table = resolve_table(source)
+    con = get_db()
+    rows = con.execute(f"""
+        SELECT
+            substr(timestamp, 7, 4) || '-' ||
+            substr(timestamp, 4, 2) || '-' ||
+            substr(timestamp, 1, 2)  AS date_iso,
+            substr(timestamp, 1, 10) AS date_display,
+            ROUND(AVG(value), 2)     AS avg_spl,
+            COUNT(*)                 AS n
+        FROM {table}
+        GROUP BY date_iso
+        ORDER BY date_iso
+    """).fetchall()
+    con.close()
+    return [dict(r) for r in rows]
+
+
+@app.get("/analysis/tier-over-time")
+def get_tier_over_time(source: str = Query("original")):
+    """Per-day count of device-hours in each WHO noise tier."""
+    table = resolve_table(source)
+    con = get_db()
+    rows = con.execute(f"""
+        SELECT
+            substr(timestamp, 7, 4) || '-' ||
+            substr(timestamp, 4, 2) || '-' ||
+            substr(timestamp, 1, 2)  AS date_iso,
+            substr(timestamp, 1, 10) AS date_display,
+            SUM(CASE WHEN value < 45             THEN 1 ELSE 0 END) AS safe,
+            SUM(CASE WHEN value >= 45 AND value < 55 THEN 1 ELSE 0 END) AS acceptable,
+            SUM(CASE WHEN value >= 55 AND value < 65 THEN 1 ELSE 0 END) AS moderate,
+            SUM(CASE WHEN value >= 65 AND value < 75 THEN 1 ELSE 0 END) AS high,
+            SUM(CASE WHEN value >= 75             THEN 1 ELSE 0 END) AS dangerous,
+            COUNT(*) AS total
+        FROM {table}
+        GROUP BY date_iso
+        ORDER BY date_iso
+    """).fetchall()
+    con.close()
+    return [dict(r) for r in rows]
+
+
+@app.get("/analysis/device-ranking")
+def get_device_ranking(source: str = Query("original")):
+    """Top 15 loudest and quietest devices by average SPL."""
+    table = resolve_table(source)
+    con = get_db()
+    rows = con.execute(f"""
+        SELECT
+            d.id, d.name, d.lat, d.long,
+            ROUND(AVG(s.value), 2) AS avg_spl,
+            COUNT(*)               AS n
+        FROM {table} s
+        JOIN devices d ON d.id = s.device_id
+        GROUP BY s.device_id
+        HAVING COUNT(*) >= 100
+        ORDER BY avg_spl DESC
+    """).fetchall()
+    con.close()
+    all_rows = [dict(r) for r in rows]
+    return {
+        "loudest":  all_rows[:15],
+        "quietest": all_rows[-15:][::-1],
+    }
+
+
 @app.get("/evaluation/summary")
 def get_evaluation_summary():
     if not os.path.exists(SUMMARY_CSV):

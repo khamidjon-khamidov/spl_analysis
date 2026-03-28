@@ -117,6 +117,49 @@ export default function EvaluationPage() {
           </p>
         </div>
 
+        {/* Formula reference */}
+        <div style={{
+          display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 24,
+        }}>
+          {[
+            {
+              name: 'MAE',
+              full: 'Mean Absolute Error',
+              formula: '1/n · Σ |yᵢ − ŷᵢ|',
+              where: 'yᵢ = true value · ŷᵢ = imputed estimate · n = number of masked slots',
+              desc: 'Average absolute deviation in dB. All errors weighted equally. Easy to interpret: an MAE of 2 dB means the method is on average 2 dB away from the true reading.',
+              color: '#3b82f6',
+            },
+            {
+              name: 'RMSE',
+              full: 'Root Mean Square Error',
+              formula: '√( 1/n · Σ (yᵢ − ŷᵢ)² )',
+              where: 'yᵢ = true value · ŷᵢ = imputed estimate · n = number of masked slots',
+              desc: 'Squares each error before averaging — large errors are penalised more heavily. RMSE ≥ MAE always. A large gap between RMSE and MAE means the method occasionally makes severe mistakes.',
+              color: '#a855f7',
+            },
+          ].map(f => (
+            <div key={f.name} style={{
+              background: '#1a1a2e', border: '1px solid #2a2a4a',
+              borderRadius: 10, padding: '16px 20px',
+            }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginBottom: 8 }}>
+                <span style={{ fontSize: 15, fontWeight: 700, color: f.color }}>{f.name}</span>
+                <span style={{ fontSize: 12, color: '#64748b' }}>{f.full}</span>
+              </div>
+              <div style={{
+                fontFamily: 'monospace', fontSize: 15, color: '#e2e8f0',
+                background: '#0f0f1a', borderRadius: 6, padding: '8px 14px',
+                marginBottom: 8, letterSpacing: 0.5,
+              }}>
+                {f.formula}
+              </div>
+              <div style={{ fontSize: 11, color: '#475569', marginBottom: 6 }}>{f.where}</div>
+              <div style={{ fontSize: 12, color: '#94a3b8', lineHeight: '18px' }}>{f.desc}</div>
+            </div>
+          ))}
+        </div>
+
         {/* Metric toggle */}
         <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
           {['mae', 'rmse'].map(m => (
