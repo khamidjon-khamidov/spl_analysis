@@ -4,6 +4,8 @@ import { useDateRange } from '../useDateRange'
 import Map, { Marker, Popup } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
+const API = import.meta.env.VITE_API_URL
+
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty'
 
 const HEALTH_LEVELS = [
@@ -43,7 +45,7 @@ export default function SPLStaticPage() {
   useEffect(() => { if (minDate && !date) setDate(minDate) }, [minDate])
 
   useEffect(() => {
-    fetch('http://localhost:8000/devices/all')
+    fetch('${API}/devices/all')
       .then(r => r.json())
       .then(setAllDevices)
   }, [])
@@ -53,7 +55,7 @@ export default function SPLStaticPage() {
     const ts = toTimestamp(date, hour)
     setLoading(true)
     setSelected(null)
-    fetch(`http://localhost:8000/spl/static?timestamp=${encodeURIComponent(ts)}&source=${source}`)
+    fetch(`${API}/spl/static?timestamp=${encodeURIComponent(ts)}&source=${source}`)
       .then(r => r.json())
       .then(data => {
         setReadings(data)

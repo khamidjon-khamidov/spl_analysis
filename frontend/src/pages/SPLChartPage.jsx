@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDataSource } from '../DataSourceContext'
+
+const API = import.meta.env.VITE_API_URL
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
   ReferenceLine, Brush, ResponsiveContainer,
@@ -66,7 +68,7 @@ export default function SPLChartPage() {
   const [loading, setLoading]   = useState(false)
 
   useEffect(() => {
-    fetch('http://localhost:8000/devices/all')
+    fetch('${API}/devices/all')
       .then(r => r.json())
       .then(d => setDevices([...d].sort((a, b) => a.name.localeCompare(b.name))))
   }, [])
@@ -74,7 +76,7 @@ export default function SPLChartPage() {
   useEffect(() => {
     if (!deviceId) return
     setLoading(true)
-    fetch(`http://localhost:8000/spl/device/${deviceId}?source=${source}`)
+    fetch(`${API}/spl/device/${deviceId}?source=${source}`)
       .then(r => r.json())
       .then(d => { setData(d); setLoading(false) })
   }, [deviceId, source])

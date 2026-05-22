@@ -3,7 +3,7 @@ import Map, { Marker, Popup } from 'react-map-gl/maplibre'
 import { useDataSource } from '../DataSourceContext'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
-const API_URL = 'http://localhost:8000/devices/all'
+const API_URL = `${import.meta.env.VITE_API_URL}/devices/all`
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty'
 
 const FILLED_COL = {

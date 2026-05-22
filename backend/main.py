@@ -80,14 +80,18 @@ def get_spl_range(
             slots.append(cur_dt.strftime("%d-%m-%Y") + f" {h:02d}:00")
         cur_dt += timedelta(days=1)
 
+    tallinn = ZoneInfo("Europe/Tallinn")
+    start_ts = int(start_dt.replace(tzinfo=tallinn).timestamp())
+    end_ts   = int(end_dt.replace(hour=23, tzinfo=tallinn).timestamp())
+
     table = resolve_table(source)
     con = get_db()
     rows = con.execute(f"""
         SELECT d.id, d.name, d.lat, d.long, s.timestamp, s.value, s.imputed
         FROM {table} s
         JOIN devices d ON d.id = s.device_id
-        WHERE s.timestamp >= ? AND s.timestamp <= ?
-    """, (slots[0], slots[-1])).fetchall()
+        WHERE s.ts_indexed >= ? AND s.ts_indexed <= ?
+    """, (start_ts, end_ts)).fetchall()
     con.close()
 
     by_ts = {}

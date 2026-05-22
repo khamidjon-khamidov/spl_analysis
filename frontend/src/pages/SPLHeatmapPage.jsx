@@ -4,6 +4,8 @@ import { useDateRange } from '../useDateRange'
 import Map, { Source, Layer } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
+const API = import.meta.env.VITE_API_URL
+
 const MAP_STYLE = 'https://tiles.openfreemap.org/styles/liberty'
 
 const SPEEDS = [
@@ -48,14 +50,14 @@ const heatmapLayer = {
     'heatmap-weight': ['get', 'weight'],
     'heatmap-radius': [
       'interpolate', ['linear'], ['zoom'],
-      9,  25,
-      11, 40,
-      13, 60,
+      9,  18,
+      11, 28,
+      13, 40,
     ],
     'heatmap-intensity': [
       'interpolate', ['linear'], ['zoom'],
-      9,  0.6,
-      13, 1.2,
+      9,  0.35,
+      13, 0.55,
     ],
     'heatmap-color': [
       'interpolate', ['linear'], ['heatmap-density'],
@@ -96,7 +98,7 @@ export default function SPLHeatmapPage() {
     setPlaying(false)
     setSlotIdx(0)
     setLoading(true)
-    fetch(`http://localhost:8000/spl/range?start=${toApiDate(startDate)}&end=${toApiDate(endDate)}&source=${source}`)
+    fetch(`${API}/spl/range?start=${toApiDate(startDate)}&end=${toApiDate(endDate)}&source=${source}`)
       .then(r => r.json())
       .then(data => { setSlots(data); setLoading(false) })
   }, [startDate, endDate, source])
@@ -177,9 +179,17 @@ export default function SPLHeatmapPage() {
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
           <label style={{ color: '#aaa', fontSize: 12 }}>From</label>
           <input type="date" value={startDate ?? ''} min={minDate ?? ''} max={maxDate ?? ''}
-            onChange={e => setStartDate(e.target.value)} style={inputStyle} />
+            onChange={e => {
+              const val = e.target.value
+              setStartDate(val)
+              if (endDate && val >= endDate) {
+                const next = new Date(val)
+                next.setDate(next.getDate() + 1)
+                setEndDate(next.toISOString().slice(0, 10))
+              }
+            }} style={inputStyle} />
           <label style={{ color: '#aaa', fontSize: 12 }}>To</label>
-          <input type="date" value={endDate ?? ''} min={minDate ?? ''} max={maxDate ?? ''}
+          <input type="date" value={endDate ?? ''} min={startDate ?? minDate ?? ''} max={maxDate ?? ''}
             onChange={e => setEndDate(e.target.value)} style={inputStyle} />
           {loading && <span style={{ color: '#aaa', fontSize: 12 }}>Loading…</span>}
           {slots.length > 0 && !loading && (

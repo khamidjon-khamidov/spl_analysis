@@ -20,7 +20,7 @@ const WHO_TIERS = [
 
 const DOW_LABELS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
-const API = 'http://localhost:8000'
+const API = import.meta.env.VITE_API_URL
 
 const tooltipStyle  = { background: '#1e1e2e', border: '1px solid #3a3a5a', borderRadius: 6, fontSize: 12 }
 const itemStyle     = { color: '#e2e8f0' }

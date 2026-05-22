@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- ── RAW INPUT ───────────────────────────────────────────────── -->
+    <mxCell id="10" value="RAW INPUT" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;fontSize=10;fontStyle=1;fontColor=#94A3B8;" vertex="1" parent="1">
+      <mxGeometry x="60" y="30" width="100" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="11" value="&lt;b&gt;CSV Export&lt;/b&gt;&lt;br&gt;all_acoustic_sensor_data_210901_211231.csv&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;471 sensors · ~3 M rows · Sep–Dec 2021&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#4f46e5;fontColor=#E2E8F0;fontSize=11;arcSize=8;align=center;verticalAlign=middle;" vertex="1" parent="1">
+      <mxGeometry x="60" y="55" width="420" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- arrow: CSV → Storage -->
+    <mxCell id="12" value="csv_to_sql.py&lt;br&gt;csv_to_sp_levels.py" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#4f46e5;fontColor=#94A3B8;fontSize=10;labelBackgroundColor=none;" edge="1" source="11" target="21" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ── STORAGE LAYER ───────────────────────────────────────────── -->
+    <mxCell id="20" value="STORAGE LAYER — data/SPL.db (SQLite)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;overflow=hidden;rotatable=0;fontSize=10;fontStyle=1;fontColor=#94A3B8;" vertex="1" parent="1">
+      <mxGeometry x="60" y="175" width="320" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="21" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#22c55e;arcSize=5;" vertex="1" parent="1">
+      <mxGeometry x="60" y="200" width="420" height="130" as="geometry" />
+    </mxCell>
+
+    <!-- devices table -->
+    <mxCell id="22" value="&lt;b&gt;devices&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;471 rows&lt;br&gt;coords · stats&lt;br&gt;is_test · group&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#22c55e;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="80" y="220" width="110" height="90" as="geometry" />
+    </mxCell>
+    <!-- sp_levels table -->
+    <mxCell id="23" value="&lt;b&gt;sp_levels&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;original&lt;br&gt;readings&lt;br&gt;imputed=0&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#22c55e;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="210" y="220" width="110" height="90" as="geometry" />
+    </mxCell>
+    <!-- imputation tables -->
+    <mxCell id="24" value="&lt;b&gt;spl_levels_historical_imp&lt;/b&gt;&lt;br&gt;&lt;b&gt;spl_levels_knn_imp&lt;/b&gt;&lt;br&gt;&lt;b&gt;spl_levels_combined_imp&lt;/b&gt;&lt;br&gt;&lt;b&gt;spl_levels_timesfm_imp&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#22c55e;fontColor=#E2E8F0;fontSize=10;align=left;spacingLeft=8;" vertex="1" parent="1">
+      <mxGeometry x="340" y="220" width="122" height="90" as="geometry" />
+    </mxCell>
+
+    <!-- arrow: Storage → Pipeline (processing) -->
+    <mxCell id="30" value="compute_missing_hours.py&lt;br&gt;select_test_devices.py" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#f59e0b;fontColor=#94A3B8;fontSize=10;labelBackgroundColor=none;exitPerimeter=0;" edge="1" source="21" target="41" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="30" y="265" />
+          <mxPoint x="30" y="440" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- arrow: Storage → Pipeline (imputation) -->
+    <mxCell id="31" value="impute_historical.py&lt;br&gt;impute_knn.py&lt;br&gt;impute_historical_and_knn.py&lt;br&gt;impute_timesfm.py" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#f59e0b;fontColor=#94A3B8;fontSize=10;labelBackgroundColor=none;" edge="1" source="21" target="41" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ── PIPELINE LAYER ──────────────────────────────────────────── -->
+    <mxCell id="40" value="PIPELINE LAYER — scripts/ + imputation/" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;overflow=hidden;rotatable=0;fontSize=10;fontStyle=1;fontColor=#94A3B8;" vertex="1" parent="1">
+      <mxGeometry x="60" y="385" width="300" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="41" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#f59e0b;arcSize=5;" vertex="1" parent="1">
+      <mxGeometry x="60" y="410" width="420" height="120" as="geometry" />
+    </mxCell>
+
+    <!-- Ingestion box -->
+    <mxCell id="42" value="&lt;b&gt;Ingestion&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;csv_to_sql.py&lt;br&gt;csv_to_sp_levels.py&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#f59e0b;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="75" y="430" width="110" height="80" as="geometry" />
+    </mxCell>
+    <!-- Processing box -->
+    <mxCell id="43" value="&lt;b&gt;Processing&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;compute_missing_hours.py&lt;br&gt;select_test_devices.py&lt;br&gt;evaluate_imputation.py&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#f59e0b;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="205" y="430" width="120" height="80" as="geometry" />
+    </mxCell>
+    <!-- Imputation box -->
+    <mxCell id="44" value="&lt;b&gt;Imputation&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;impute_historical.py&lt;br&gt;impute_knn.py&lt;br&gt;impute_combined.py&lt;br&gt;impute_timesfm.py&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#f59e0b;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="345" y="430" width="120" height="80" as="geometry" />
+    </mxCell>
+
+    <!-- evaluation CSVs -->
+    <mxCell id="45" value="&lt;b&gt;evaluation_results.csv&lt;/b&gt;&lt;br&gt;&lt;b&gt;evaluation_summary.csv&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;written once · read-only after&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#f59e0b;fontColor=#E2E8F0;fontSize=10;align=center;arcSize=8;dashed=1;" vertex="1" parent="1">
+      <mxGeometry x="530" y="430" width="180" height="80" as="geometry" />
+    </mxCell>
+
+    <!-- arrow: Pipeline → eval CSVs -->
+    <mxCell id="46" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#f59e0b;" edge="1" source="41" target="45" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- arrow: Pipeline → Backend (reads DB) -->
+    <mxCell id="47" value="reads SPL.db + CSVs" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#3b82f6;fontColor=#94A3B8;fontSize=10;labelBackgroundColor=none;" edge="1" source="41" target="61" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- arrow: eval CSVs → Backend -->
+    <mxCell id="48" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#3b82f6;" edge="1" source="45" target="61" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="620" y="580" />
+          <mxPoint x="760" y="580" />
+          <mxPoint x="760" y="640" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- ── BACKEND LAYER ───────────────────────────────────────────── -->
+    <mxCell id="60" value="BACKEND LAYER — backend/main.py (FastAPI · port 8000)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;overflow=hidden;rotatable=0;fontSize=10;fontStyle=1;fontColor=#94A3B8;" vertex="1" parent="1">
+      <mxGeometry x="60" y="575" width="420" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="61" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#3b82f6;arcSize=5;" vertex="1" parent="1">
+      <mxGeometry x="60" y="600" width="680" height="110" as="geometry" />
+    </mxCell>
+
+    <!-- /spl/* -->
+    <mxCell id="62" value="&lt;b&gt;/spl/*&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;static&lt;br&gt;range&lt;br&gt;device/{id}&lt;br&gt;date-range&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#3b82f6;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="80" y="618" width="120" height="80" as="geometry" />
+    </mxCell>
+    <!-- /analysis/* -->
+    <mxCell id="63" value="&lt;b&gt;/analysis/*&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;by-hour&lt;br&gt;dow-heatmap&lt;br&gt;distribution&lt;br&gt;daily-trend&lt;br&gt;tier-over-time&lt;br&gt;device-ranking&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#3b82f6;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="240" y="618" width="140" height="80" as="geometry" />
+    </mxCell>
+    <!-- /evaluation/* -->
+    <mxCell id="64" value="&lt;b&gt;/evaluation/*&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;summary&lt;br&gt;per-device&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#3b82f6;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="420" y="618" width="120" height="80" as="geometry" />
+    </mxCell>
+    <!-- resolve_table note -->
+    <mxCell id="65" value="&lt;font color=&apos;#94A3B8&apos;&gt;resolve_table(source) — maps ?source= to the correct DB table for all endpoints&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#2a2a4a;fontColor=#94A3B8;fontSize=10;align=center;dashed=1;" vertex="1" parent="1">
+      <mxGeometry x="570" y="618" width="150" height="80" as="geometry" />
+    </mxCell>
+
+    <!-- arrow: Backend → Frontend -->
+    <mxCell id="66" value="HTTP / JSON" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#a855f7;fontColor=#94A3B8;fontSize=10;labelBackgroundColor=none;" edge="1" source="61" target="81" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- ── FRONTEND LAYER ──────────────────────────────────────────── -->
+    <mxCell id="80" value="FRONTEND LAYER — frontend/src/  (React + Vite · port 5173)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;overflow=hidden;rotatable=0;fontSize=10;fontStyle=1;fontColor=#94A3B8;" vertex="1" parent="1">
+      <mxGeometry x="60" y="762" width="450" height="20" as="geometry" />
+    </mxCell>
+    <mxCell id="81" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a1a2e;strokeColor=#a855f7;arcSize=5;" vertex="1" parent="1">
+      <mxGeometry x="60" y="788" width="680" height="160" as="geometry" />
+    </mxCell>
+
+    <!-- DataSourceContext -->
+    <mxCell id="82" value="&lt;b&gt;DataSourceContext&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;global imputation method selector&lt;br&gt;re-fetches all mounted pages on change&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#a855f7;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="80" y="806" width="210" height="60" as="geometry" />
+    </mxCell>
+
+    <!-- Pages -->
+    <mxCell id="83" value="&lt;b&gt;DevicesPage&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;sensor map&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#a855f7;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="80" y="882" width="100" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="84" value="&lt;b&gt;SPLStaticPage&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;snapshot map&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#a855f7;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="190" y="882" width="100" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="85" value="&lt;b&gt;SPLDailyPage&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;animated map&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#a855f7;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="300" y="882" width="100" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="86" value="&lt;b&gt;SPLHeatmapPage&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;density heatmap&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#a855f7;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="410" y="882" width="100" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="87" value="&lt;b&gt;AnalysisPage&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;trend charts&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#a855f7;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="520" y="882" width="100" height="50" as="geometry" />
+    </mxCell>
+    <mxCell id="88" value="&lt;b&gt;EvaluationPage&lt;/b&gt;&lt;br&gt;&lt;font color=&apos;#94A3B8&apos;&gt;MAE / RMSE&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0f0f19;strokeColor=#a855f7;fontColor=#E2E8F0;fontSize=10;align=center;" vertex="1" parent="1">
+      <mxGeometry x="630" y="882" width="100" height="50" as="geometry" />
+    </mxCell>
+
+    <!-- Libraries label -->
+    <mxCell id="89" value="&lt;font color=&apos;#475569&apos;&gt;MapLibre GL · Recharts · react-router-dom&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=right;verticalAlign=middle;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+      <mxGeometry x="430" y="806" width="290" height="30" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>

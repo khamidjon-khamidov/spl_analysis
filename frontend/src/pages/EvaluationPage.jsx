@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+
+const API = import.meta.env.VITE_API_URL
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   Legend, ResponsiveContainer, Cell,
@@ -88,8 +90,8 @@ export default function EvaluationPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:8000/evaluation/summary').then(r => r.json()),
-      fetch('http://localhost:8000/evaluation/per-device').then(r => r.json()),
+      fetch('${API}/evaluation/summary').then(r => r.json()),
+      fetch('${API}/evaluation/per-device').then(r => r.json()),
     ]).then(([s, d]) => {
       setSummary(s)
       setPerDevice(d)

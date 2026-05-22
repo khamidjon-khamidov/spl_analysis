@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 
+const API = import.meta.env.VITE_API_URL
+
 export function useDateRange() {
   const [minDate, setMinDate] = useState(null)
   const [maxDate, setMaxDate] = useState(null)
 
   useEffect(() => {
-    fetch('http://localhost:8000/spl/date-range')
+    fetch(`${API}/spl/date-range`)
       .then(r => r.json())
       .then(data => {
         setMinDate(data.min_date)

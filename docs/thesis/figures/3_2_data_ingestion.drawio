@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         TITLE
+    ════════════════════════════════════════════════════════════════ -->
+    <mxCell id="2" value="Data Ingestion &amp; Pre-processing Pipeline" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=15;fontStyle=1;fontColor=#1e293b;" vertex="1" parent="1">
+      <mxGeometry x="200" y="20" width="760" height="30" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         RAW CSV  (source table)
+    ════════════════════════════════════════════════════════════════ -->
+
+    <!-- header -->
+    <mxCell id="100" value="RAW CSV" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#475569;" vertex="1" parent="1">
+      <mxGeometry x="40" y="68" width="200" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="101" value="all_acoustic_sensor_data_210901_211231.csv" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontStyle=2;fontColor=#64748b;" vertex="1" parent="1">
+      <mxGeometry x="40" y="84" width="260" height="16" as="geometry" />
+    </mxCell>
+
+    <!-- table container -->
+    <mxCell id="110" value="" style="swimlane;startSize=0;fillColor=#f8fafc;strokeColor=#94a3b8;rounded=1;arcSize=4;fontColor=#1e293b;" vertex="1" parent="1">
+      <mxGeometry x="40" y="102" width="260" height="222" as="geometry" />
+    </mxCell>
+
+    <!-- column header row -->
+    <mxCell id="111" value="Column" style="text;html=1;strokeColor=#94a3b8;fillColor=#e2e8f0;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="110">
+      <mxGeometry x="0" y="0" width="140" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="112" value="Description" style="text;html=1;strokeColor=#94a3b8;fillColor=#e2e8f0;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="110">
+      <mxGeometry x="140" y="0" width="120" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- rows -->
+    <mxCell id="113" value="name" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="110">
+      <mxGeometry x="0" y="28" width="140" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="114" value="Device identifier" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#475569;" vertex="1" parent="110">
+      <mxGeometry x="140" y="28" width="120" height="28" as="geometry" />
+    </mxCell>
+
+    <mxCell id="115" value="value" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="110">
+      <mxGeometry x="0" y="56" width="140" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="116" value="SPL reading (dB)" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#475569;" vertex="1" parent="110">
+      <mxGeometry x="140" y="56" width="120" height="28" as="geometry" />
+    </mxCell>
+
+    <mxCell id="117" value="dt_production" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="110">
+      <mxGeometry x="0" y="84" width="140" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="118" value="Timestamp w/ UTC offset" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#475569;" vertex="1" parent="110">
+      <mxGeometry x="140" y="84" width="120" height="28" as="geometry" />
+    </mxCell>
+
+    <mxCell id="119" value="latitude" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="110">
+      <mxGeometry x="0" y="112" width="140" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="120" value="WGS 84 latitude" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#475569;" vertex="1" parent="110">
+      <mxGeometry x="140" y="112" width="120" height="28" as="geometry" />
+    </mxCell>
+
+    <mxCell id="121" value="longitude" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="110">
+      <mxGeometry x="0" y="140" width="140" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="122" value="WGS 84 longitude" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#475569;" vertex="1" parent="110">
+      <mxGeometry x="140" y="140" width="120" height="28" as="geometry" />
+    </mxCell>
+
+    <mxCell id="123" value="fk_event_type" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#94a3b8;fontStyle=2;" vertex="1" parent="110">
+      <mxGeometry x="0" y="168" width="140" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="124" value="Not used" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#94a3b8;fontStyle=2;" vertex="1" parent="110">
+      <mxGeometry x="140" y="168" width="120" height="28" as="geometry" />
+    </mxCell>
+
+    <mxCell id="125" value="fk_device_type" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#94a3b8;fontStyle=2;" vertex="1" parent="110">
+      <mxGeometry x="0" y="196" width="140" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="126" value="Not used" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#94a3b8;fontStyle=2;" vertex="1" parent="110">
+      <mxGeometry x="140" y="196" width="120" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         SCRIPT BOXES  (centre column)
+    ════════════════════════════════════════════════════════════════ -->
+
+    <!-- csv_to_sql.py -->
+    <mxCell id="200" value="&lt;b&gt;csv_to_sql.py&lt;/b&gt;&lt;br&gt;&lt;font style=&apos;font-size:9px;&apos; color=&apos;#475569&apos;&gt;• stream CSV (1 pass)&lt;br&gt;• deduplicate by name&lt;br&gt;• keep first-seen coords&lt;br&gt;• warn if coords drift &gt; 1e-5°&lt;br&gt;• sort by name → assign id&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#3b82f6;fontColor=#1e293b;fontSize=10;align=left;spacingLeft=10;arcSize=8;verticalAlign=middle;" vertex="1" parent="1">
+      <mxGeometry x="380" y="102" width="200" height="110" as="geometry" />
+    </mxCell>
+
+    <!-- csv_to_sp_levels.py -->
+    <mxCell id="201" value="&lt;b&gt;csv_to_sp_levels.py&lt;/b&gt;&lt;br&gt;&lt;font style=&apos;font-size:9px;&apos; color=&apos;#475569&apos;&gt;• stream CSV (1 pass)&lt;br&gt;• parse dt_production (2 formats)&lt;br&gt;• convert to Europe/Tallinn&lt;br&gt;• floor to hour boundary&lt;br&gt;• bucket → median → round&lt;br&gt;• write ts_indexed (UTC unix)&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eff6ff;strokeColor=#3b82f6;fontColor=#1e293b;fontSize=10;align=left;spacingLeft=10;arcSize=8;verticalAlign=middle;" vertex="1" parent="1">
+      <mxGeometry x="380" y="234" width="200" height="132" as="geometry" />
+    </mxCell>
+
+    <!-- compute_missing_hours.py -->
+    <mxCell id="202" value="&lt;b&gt;compute_missing_hours.py&lt;/b&gt;&lt;br&gt;&lt;font style=&apos;font-size:9px;&apos; color=&apos;#475569&apos;&gt;• no CSV re-read&lt;br&gt;• MIN / MAX ts_indexed per device&lt;br&gt;• total_hours = (max−min)/3600 + 1&lt;br&gt;• hours_with_data = COUNT(DISTINCT)&lt;br&gt;• missing_hours = total − with_data&lt;br&gt;• UPDATE devices table&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0fdf4;strokeColor=#22c55e;fontColor=#1e293b;fontSize=10;align=left;spacingLeft=10;arcSize=8;verticalAlign=middle;" vertex="1" parent="1">
+      <mxGeometry x="380" y="400" width="200" height="132" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         devices TABLE
+    ════════════════════════════════════════════════════════════════ -->
+
+    <mxCell id="300" value="devices" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#475569;" vertex="1" parent="1">
+      <mxGeometry x="670" y="68" width="200" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="301" value="SQLite · 471 rows · one per sensor" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontStyle=2;fontColor=#64748b;" vertex="1" parent="1">
+      <mxGeometry x="670" y="84" width="230" height="16" as="geometry" />
+    </mxCell>
+
+    <mxCell id="310" value="" style="swimlane;startSize=0;fillColor=#f8fafc;strokeColor=#22c55e;rounded=1;arcSize=4;" vertex="1" parent="1">
+      <mxGeometry x="670" y="102" width="260" height="334" as="geometry" />
+    </mxCell>
+
+    <!-- header row -->
+    <mxCell id="311" value="Column" style="text;html=1;strokeColor=#22c55e;fillColor=#dcfce7;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="310">
+      <mxGeometry x="0" y="0" width="110" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="312" value="Type" style="text;html=1;strokeColor=#22c55e;fillColor=#dcfce7;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="310">
+      <mxGeometry x="110" y="0" width="70" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="313" value="Notes" style="text;html=1;strokeColor=#22c55e;fillColor=#dcfce7;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="310">
+      <mxGeometry x="180" y="0" width="80" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- id -->
+    <mxCell id="314" value="🔑 id" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="310">
+      <mxGeometry x="0" y="28" width="110" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="315" value="INTEGER" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="310">
+      <mxGeometry x="110" y="28" width="70" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="316" value="PK · auto, sorted by name" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="310">
+      <mxGeometry x="180" y="28" width="80" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- name -->
+    <mxCell id="317" value="name" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="310">
+      <mxGeometry x="0" y="54" width="110" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="318" value="TEXT" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="310">
+      <mxGeometry x="110" y="54" width="70" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="319" value="UNIQUE · device label" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="310">
+      <mxGeometry x="180" y="54" width="80" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- lat -->
+    <mxCell id="320" value="lat" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="310">
+      <mxGeometry x="0" y="80" width="110" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="321" value="REAL" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="310">
+      <mxGeometry x="110" y="80" width="70" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="322" value="First-seen · WGS 84" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="310">
+      <mxGeometry x="180" y="80" width="80" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- long -->
+    <mxCell id="323" value="long" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="310">
+      <mxGeometry x="0" y="106" width="110" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="324" value="REAL" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="310">
+      <mxGeometry x="110" y="106" width="70" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="325" value="First-seen · WGS 84" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize:9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="310">
+      <mxGeometry x="180" y="106" width="80" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- divider label -->
+    <mxCell id="326" value="Added by compute_missing_hours.py" style="text;html=1;strokeColor=none;fillColor=#f0fdf4;align=left;verticalAlign=middle;fontSize=9;fontStyle=2;spacingLeft=8;fontColor=#22c55e;" vertex="1" parent="310">
+      <mxGeometry x="0" y="132" width="260" height="20" as="geometry" />
+    </mxCell>
+
+    <!-- data_start -->
+    <mxCell id="327" value="data_start" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="310">
+      <mxGeometry x="0" y="152" width="110" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="328" value="TEXT" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="310">
+      <mxGeometry x="110" y="152" width="70" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="329" value="First reading UTC" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="310">
+      <mxGeometry x="180" y="152" width="80" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- total_hours -->
+    <mxCell id="330" value="total_hours" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="310">
+      <mxGeometry x="0" y="178" width="110" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="331" value="INTEGER" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="310">
+      <mxGeometry x="110" y="178" width="70" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="332" value="(max−min)/3600 + 1" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="310">
+      <mxGeometry x="180" y="178" width="80" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- hours_with_data -->
+    <mxCell id="333" value="hours_with_data" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize:10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="310">
+      <mxGeometry x="0" y="204" width="110" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="334" value="INTEGER" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="310">
+      <mxGeometry x="110" y="204" width="70" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="335" value="COUNT(DISTINCT ts)" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="310">
+      <mxGeometry x="180" y="204" width="80" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- missing_hours -->
+    <mxCell id="336" value="missing_hours" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="310">
+      <mxGeometry x="0" y="230" width="110" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="337" value="INTEGER" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="310">
+      <mxGeometry x="110" y="230" width="70" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="338" value="total − with_data" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="310">
+      <mxGeometry x="180" y="230" width="80" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- is_test / test_group -->
+    <mxCell id="339" value="is_test · test_group" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#94a3b8;fontStyle=2;" vertex="1" parent="310">
+      <mxGeometry x="0" y="256" width="110" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="340" value="INT · TEXT" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#94a3b8;fontStyle=2;" vertex="1" parent="310">
+      <mxGeometry x="110" y="256" width="70" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="341" value="Added later — §3.6" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#94a3b8;fontStyle=2;" vertex="1" parent="310">
+      <mxGeometry x="180" y="256" width="80" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- hist/knn/combined/timesfm fill cols -->
+    <mxCell id="342" value="*_hours_filled (×4)" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#94a3b8;fontStyle=2;" vertex="1" parent="310">
+      <mxGeometry x="0" y="282" width="110" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="343" value="INTEGER" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#94a3b8;fontStyle=2;" vertex="1" parent="310">
+      <mxGeometry x="110" y="282" width="70" height="26" as="geometry" />
+    </mxCell>
+    <mxCell id="344" value="Added later — §3.4" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#94a3b8;fontStyle=2;" vertex="1" parent="310">
+      <mxGeometry x="180" y="282" width="80" height="26" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         sp_levels TABLE
+    ════════════════════════════════════════════════════════════════ -->
+
+    <mxCell id="400" value="sp_levels" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;fontColor=#475569;" vertex="1" parent="1">
+      <mxGeometry x="670" y="458" width="200" height="18" as="geometry" />
+    </mxCell>
+    <mxCell id="401" value="SQLite · ~1 M rows · original readings only" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=9;fontStyle=2;fontColor=#64748b;" vertex="1" parent="1">
+      <mxGeometry x="670" y="474" width="260" height="16" as="geometry" />
+    </mxCell>
+
+    <mxCell id="410" value="" style="swimlane;startSize=0;fillColor=#f8fafc;strokeColor=#3b82f6;rounded=1;arcSize=4;" vertex="1" parent="1">
+      <mxGeometry x="670" y="492" width="260" height="196" as="geometry" />
+    </mxCell>
+
+    <!-- header -->
+    <mxCell id="411" value="Column" style="text;html=1;strokeColor=#3b82f6;fillColor=#dbeafe;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="410">
+      <mxGeometry x="0" y="0" width="100" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="412" value="Type" style="text;html=1;strokeColor=#3b82f6;fillColor=#dbeafe;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="410">
+      <mxGeometry x="100" y="0" width="60" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="413" value="Notes" style="text;html=1;strokeColor=#3b82f6;fillColor=#dbeafe;align=left;verticalAlign=middle;fontSize=10;fontStyle=1;spacingLeft=8;fontColor=#1e293b;" vertex="1" parent="410">
+      <mxGeometry x="160" y="0" width="100" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- device_id FK -->
+    <mxCell id="414" value="device_id" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="410">
+      <mxGeometry x="0" y="28" width="100" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="415" value="INTEGER" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="410">
+      <mxGeometry x="100" y="28" width="60" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="416" value="FK → devices(id) · IDX" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="410">
+      <mxGeometry x="160" y="28" width="100" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- timestamp -->
+    <mxCell id="417" value="timestamp" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="410">
+      <mxGeometry x="0" y="56" width="100" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="418" value="TEXT" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="410">
+      <mxGeometry x="100" y="56" width="60" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="419" value="dd-mm-yyyy hh:00 · Tallinn" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="410">
+      <mxGeometry x="160" y="56" width="100" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- ts_indexed -->
+    <mxCell id="420" value="ts_indexed" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="410">
+      <mxGeometry x="0" y="84" width="100" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="421" value="INTEGER" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="410">
+      <mxGeometry x="100" y="84" width="60" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="422" value="Unix UTC seconds · IDX" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="410">
+      <mxGeometry x="160" y="84" width="100" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- value -->
+    <mxCell id="423" value="value" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="410">
+      <mxGeometry x="0" y="112" width="100" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="424" value="INTEGER" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="410">
+      <mxGeometry x="100" y="112" width="60" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="425" value="Hourly median dB, rounded" style="text;html=1;strokeColor=#e2e8f0;fillColor=#f8fafc;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="410">
+      <mxGeometry x="160" y="112" width="100" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- imputed -->
+    <mxCell id="426" value="imputed" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#1e293b;fontStyle=1;" vertex="1" parent="410">
+      <mxGeometry x="0" y="140" width="100" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="427" value="INTEGER" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=10;spacingLeft=8;fontColor=#3b82f6;" vertex="1" parent="410">
+      <mxGeometry x="100" y="140" width="60" height="28" as="geometry" />
+    </mxCell>
+    <mxCell id="428" value="Always 0 (original only)" style="text;html=1;strokeColor=#e2e8f0;fillColor=#ffffff;align=left;verticalAlign=middle;fontSize=9;spacingLeft=8;fontColor=#475569;" vertex="1" parent="410">
+      <mxGeometry x="160" y="140" width="100" height="28" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         MISSING RATE CALLOUT
+    ════════════════════════════════════════════════════════════════ -->
+    <mxCell id="500" value="Fleet-wide missing rate&lt;br&gt;&lt;b style=&apos;font-size:22px;&apos;&gt;~26%&lt;/b&gt;&lt;br&gt;&lt;font style=&apos;font-size:9px;&apos; color=&apos;#475569&apos;&gt;of all expected hourly readings&lt;br&gt;absent from raw dataset&lt;br&gt;→ motivates §3.4 imputation&lt;/font&gt;" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fef9c3;strokeColor=#f59e0b;fontColor=#1e293b;fontSize=11;align=center;fontStyle=1;" vertex="1" parent="1">
+      <mxGeometry x="400" y="420" width="160" height="110" as="geometry" />
+    </mxCell>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         ARROWS
+    ════════════════════════════════════════════════════════════════ -->
+
+    <!-- CSV → csv_to_sql.py -->
+    <mxCell id="600" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#3b82f6;strokeWidth=2;" edge="1" source="110" target="200" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- CSV → csv_to_sp_levels.py -->
+    <mxCell id="601" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#3b82f6;strokeWidth=2;" edge="1" source="110" target="201" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- csv_to_sql.py → devices -->
+    <mxCell id="602" value="writes" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;strokeColor=#22c55e;strokeWidth=2;fontColor=#475569;fontSize=10;" edge="1" source="200" target="310" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- csv_to_sp_levels.py → sp_levels -->
+    <mxCell id="603" value="writes" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#3b82f6;strokeWidth=2;fontColor=#475569;fontSize=10;" edge="1" source="201" target="410" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- sp_levels → compute_missing_hours -->
+    <mxCell id="604" value="reads" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#22c55e;strokeWidth=2;fontColor=#475569;fontSize=10;" edge="1" source="410" target="202" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- compute_missing_hours → devices (UPDATE) -->
+    <mxCell id="605" value="UPDATE" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;strokeColor=#22c55e;strokeWidth=2;fontColor=#475569;fontSize=10;dashed=1;" edge="1" source="202" target="310" parent="1">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="640" y="466" />
+          <mxPoint x="640" y="352" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- compute_missing_hours → callout -->
+    <mxCell id="606" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=#f59e0b;strokeWidth=1.5;dashed=1;" edge="1" source="202" target="500" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- FK relation: sp_levels.device_id → devices.id -->
+    <mxCell id="607" value="device_id → id" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeColor=#94a3b8;strokeWidth=1;dashed=1;fontColor=#94a3b8;fontSize=9;endArrow=ERmany;startArrow=ERone;exitPerimeter=0;entryPerimeter=0;" edge="1" source="410" target="310" parent="1">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+  </root>
+</mxGraphModel>

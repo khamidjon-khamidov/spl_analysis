@@ -4,6 +4,8 @@ import { useDateRange } from '../useDateRange'
 import Map, { Marker, Popup } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
+const API = import.meta.env.VITE_API_URL
+
 const MAP_STYLE  = 'https://tiles.openfreemap.org/styles/liberty'
 
 const SPEEDS = [
@@ -51,7 +53,7 @@ export default function SPLDailyPage() {
   }, [minDate])
 
   useEffect(() => {
-    fetch('http://localhost:8000/devices/all')
+    fetch('${API}/devices/all')
       .then(r => r.json())
       .then(setAllDevices)
   }, [])
@@ -64,7 +66,7 @@ export default function SPLDailyPage() {
     setLoading(true)
     const s = toApiDate(startDate)
     const e = toApiDate(endDate)
-    fetch(`http://localhost:8000/spl/range?start=${s}&end=${e}&source=${source}`)
+    fetch(`${API}/spl/range?start=${s}&end=${e}&source=${source}`)
       .then(r => r.json())
       .then(data => { setSlots(data); setLoading(false) })
   }, [startDate, endDate, source])

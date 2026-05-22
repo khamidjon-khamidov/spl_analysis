@@ -1,0 +1,17 @@
+# 4.5 Visual Dashboard as an Analytical Tool
+
+The interactive dashboard serves not only as a presentation layer for the imputation results but as an analytical instrument in its own right, enabling observations about sensor health, urban noise patterns, and spatial inequality that would not be accessible from raw data tables alone.
+
+## 4.5.1 Sensor Health and Faulty Device Detection
+
+The Devices page provides an immediate fleet-wide overview of data completeness. Each sensor is colour-coded by its missing data rate: green for sensors with less than 20% missing hours, orange for those with 20–50% missing, and red for those exceeding 50%. This visual encoding makes faulty or unreliable devices immediately identifiable without inspecting individual records. Sensors that appear red are either experiencing persistent connectivity failures, were deployed for only a short portion of the study period, or suffered hardware issues that rendered them largely inactive. The completeness map allows a network operator to identify which sensors require maintenance or replacement at a glance, and to assess the geographic distribution of unreliable nodes across the city.
+
+## 4.5.2 Spatial and Temporal Noise Patterns
+
+The animated SPL playback and heatmap reveal clear spatial and temporal patterns in Tallinn's urban acoustic environment. Daytime noise levels are consistently higher than nighttime levels across the fleet, reflecting the expected relationship between human activity and acoustic exposure. However, the spatial distribution of noise is far from uniform. Several locations stand out as persistently loud: Pallasti and Kalaranna register elevated SPL levels across most hours, reflecting their proximity to high-traffic corridors and the waterfront area respectively. Linnamäe tee similarly shows noticeably higher SPL than the surrounding sensors, consistent with its role as a major arterial road. In contrast, Üliõpilaste tee registers among the lowest SPL readings in the network, likely due to its predominantly residential and academic surroundings with limited through-traffic.
+
+At a broader geographic scale, the device ranking map on the Analysis page reveals an east–west asymmetry in noise exposure: western Tallinn tends to be quieter than the eastern parts of the city, which are more exposed to transit corridors and industrial activity. The 15 loudest and 15 quietest devices cluster in spatially distinct zones, suggesting that noise inequality in Tallinn has a clear geographic structure rather than being randomly distributed across the network.
+
+## 4.5.3 Weekly and Hourly Profiles
+
+The Analysis page's hourly and day-of-week charts surface the temporal rhythm of urban noise in detail. On weekdays, SPL peaks between 08:00 and 18:00, driven by morning commute traffic, commercial activity, and the afternoon peak hour. The pattern is broad and sustained across the working day. On weekends, the daytime peak narrows considerably, appearing around 14:00 rather than spanning the full working day — reflecting later waking patterns and reduced commuter traffic. Weekends also show a slightly elevated SPL between 00:00 and 04:00 compared to weekdays, consistent with nighttime social activity concentrated on Friday and Saturday nights. Overall, weekend daytime SPL is lower than the corresponding weekday levels, confirming that traffic and commercial activity are the dominant noise sources in the monitored areas rather than residential or leisure-driven noise.
