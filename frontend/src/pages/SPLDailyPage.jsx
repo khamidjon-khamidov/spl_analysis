@@ -53,7 +53,7 @@ export default function SPLDailyPage() {
   }, [minDate])
 
   useEffect(() => {
-    fetch('${API}/devices/all')
+    fetch(`${API}/devices/all`)
       .then(r => r.json())
       .then(setAllDevices)
   }, [])

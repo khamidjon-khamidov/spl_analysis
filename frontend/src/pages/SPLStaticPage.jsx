@@ -45,7 +45,7 @@ export default function SPLStaticPage() {
   useEffect(() => { if (minDate && !date) setDate(minDate) }, [minDate])
 
   useEffect(() => {
-    fetch('${API}/devices/all')
+    fetch(`${API}/devices/all`)
       .then(r => r.json())
       .then(setAllDevices)
   }, [])

@@ -68,7 +68,7 @@ export default function SPLChartPage() {
   const [loading, setLoading]   = useState(false)
 
   useEffect(() => {
-    fetch('${API}/devices/all')
+    fetch(`${API}/devices/all`)
       .then(r => r.json())
       .then(d => setDevices([...d].sort((a, b) => a.name.localeCompare(b.name))))
   }, [])

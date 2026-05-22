@@ -20,13 +20,15 @@
   background: #1e1e2e;
   border-bottom: 1px solid #333;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1000;
 }
 
 .brand {
   font-size: 18px;
   font-weight: 700;
   color: #fff;
-  margin-right: 16px;
+  margin-right: 48px;
 }
 
 .nav-btn {
@@ -51,6 +53,7 @@
 .content {
   flex: 1;
   overflow: hidden;
+  isolation: isolate;
 }
 
 .placeholder {
