@@ -90,8 +90,8 @@ export default function EvaluationPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('${API}/evaluation/summary').then(r => r.json()),
-      fetch('${API}/evaluation/per-device').then(r => r.json()),
+      fetch(`${API}/evaluation/summary`).then(r => r.json()),
+      fetch(`${API}/evaluation/per-device`).then(r => r.json()),
     ]).then(([s, d]) => {
       setSummary(s)
       setPerDevice(d)
