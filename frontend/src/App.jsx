@@ -47,7 +47,7 @@ function App() {
       <div className="app">
         <nav className="navbar">
           <span className="brand">SPL</span>
-          <NavLink to="/devices"    className={navClass}>Devices Page</NavLink>
+          <NavLink to="/devices"    className={navClass}>Devices<br />Page</NavLink>
           <NavLink to="/spl-static" className={navClass}>SPL Static</NavLink>
           <NavLink to="/spl-daily"  className={navClass}>SPL Daily Analysis</NavLink>
           <NavLink to="/spl-chart"  className={navClass}>SPL Chart</NavLink>
